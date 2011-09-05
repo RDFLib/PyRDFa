@@ -15,9 +15,9 @@ from pyRdfa.transform.containerscollections 	import containers_collections
 from pyRdfa.options								import Options
 
 extraTransformers = [
-	containers_collections,
-	#OpenID_transform,
-	#DC_transform,
+	# containers_collections,
+	# OpenID_transform,
+	# DC_transform,
 	meta_transform
 ]
 		

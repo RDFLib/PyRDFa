@@ -94,6 +94,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	# of the @rel/@rev attributes
 	current_subject = None
 	current_object  = None
+	new_collection  = False
 
 	if has_one_of_attributes(node, "rel", "rev")  :
 		# in this case there is the notion of 'left' and 'right' of @rel/@rev
@@ -111,6 +112,10 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
 			current_subject = parent_object
+		else :
+			state.reset_collection_mapping()
+			new_collection  = True
+
 
 		# set the object resource
 		if node.hasAttribute("resource") :
@@ -135,14 +140,17 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
 			current_subject = parent_object
+		else :
+			state.reset_collection_mapping()
+			new_collection  = True
 
 		# in this case no non-literal triples will be generated, so the
-		# only role of the current_objectResource is to be transferred to
+		# only role of the current_object Resource is to be transferred to
 		# the children node
 		current_object = current_subject
 
 	# ---------------------------------------------------------------------
-	## The possible typeof indicates a number of type statements on the newSubject
+	## The possible typeof indicates a number of type statements on the new Subject
 	for defined_type in state.getURI("typeof") :
 		graph.add((current_subject, ns_rdf["type"], defined_type))
 
@@ -152,11 +160,17 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	incomplete_triples  = []
 	for prop in state.getURI("rel") :
 		if not isinstance(prop,BNode) :
-			theTriple = (current_subject,prop,current_object)
-			if current_object != None :
-				graph.add(theTriple)
+			if node.hasAttribute("member") :
+				if current_object != None :
+					state.add_to_collection_mapping(prop, current_object)
+				else :
+					incomplete_triples.append((None, prop, None))
 			else :
-				incomplete_triples.append(theTriple)
+				theTriple = (current_subject, prop, current_object)
+				if current_object != None :
+					graph.add(theTriple)
+				else :
+					incomplete_triples.append(theTriple)
 		else :
 			state.options.add_warning(err_no_blank_node % "rel", warning_type=IncorrectBlankNodeUsage, node=node.nodeName)
 
@@ -177,6 +191,8 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	if node.hasAttribute("property") :
 		# Generate the literal. It has been put it into a separate module to make it more managable
 		generate_literal(node, graph, current_subject, state)
+		# LIST: if @member, then collection_mapping[property].append(Literal), ie, there may be a need
+		# for restructuring the handling of a literal
 
 	# ----------------------------------------------------------------------
 	# Setting the current object to a bnode is setting up a possible resource
@@ -195,9 +211,28 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	# ---------------------------------------------------------------------
 	# At this point, the parent's incomplete triples may be completed
 	for (s,p,o) in parent_incomplete_triples :
-		if s == None : s = current_subject
-		if o == None : o = current_subject
-		graph.add((s,p,o))
+		if s == None and o == None :
+			# This is an encoded version of a hanging rel for a collection:
+			state.add_to_collection_mapping( p, current_subject )
+		else :
+			if s == None : s = current_subject
+			if o == None : o = current_subject
+			graph.add((s,p,o))
+
+	# Generate the lists, if any...
+	if new_collection and len(state.collection_mapping) != 0 :
+		for prop in state.collection_mapping :
+			bnodes = [ (BNode(), i) for i in state.collection_mapping[prop] ]
+			if len(bnodes) == 0 :
+				# should not happen, though
+				continue
+			for (b,r) in bnodes :
+				graph.add( (b, ns_rdf["first"], r) )
+			for i in range(0, len(bnodes)-1) :
+				graph.add( (bnodes[i][0], ns_rdf["rest"], bnodes[i+1][0]) )
+				
+			graph.add( (bnodes[-1][0], ns_rdf["rest"], ns_rdf["nil"]) )
+			graph.add( (current_subject, prop, bnodes[0][0]) )
 
 	# -------------------------------------------------------------------
 	# This should be it...
