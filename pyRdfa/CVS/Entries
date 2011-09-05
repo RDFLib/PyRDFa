@@ -1,0 +1,21 @@
+D/serializers////
+D/transform////
+/EmbeddedRDF.py/1.1/Mon Jan 18 13:42:06 2010//
+/uri.py/1.1/Tue Oct  5 10:34:22 2010//
+D/host////
+/Utils.py/1.24/Tue May 31 12:05:51 2011/-kb/
+/Literal.py/1.18/Fri Aug 12 10:01:05 2011//
+/Parse.py/1.16/Fri Aug 12 10:01:05 2011//
+/State.py/1.35/Fri Aug 12 10:01:05 2011//
+/Options.py/1.18/Fri Aug 12 10:01:05 2011//
+/defaultprofiles.py/1.1/Fri Aug 12 10:01:54 2011//
+/graph.py/1.1/Fri Aug 12 10:01:54 2011//
+/termorcurie.py/1.1/Fri Aug 12 10:01:54 2011//
+/utils.py/1.1/Fri Aug 12 10:01:54 2011//
+/literal.py/1.1/Fri Aug 12 10:04:01 2011//
+D/rdfs////
+/embeddedRDF.py/1.2/Fri Aug 12 11:26:15 2011//
+/options.py/1.2/Fri Aug 12 11:26:15 2011//
+/__init__.py/1.44/Thu Sep  1 11:06:13 2011//
+/parse.py/1.2/Thu Sep  1 11:06:13 2011//
+/state.py/1.2/Thu Sep  1 11:06:13 2011//
