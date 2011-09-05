@@ -213,7 +213,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	for (s,p,o) in parent_incomplete_triples :
 		if s == None and o == None :
 			# This is an encoded version of a hanging rel for a collection:
-			state.add_to_collection_mapping( p, current_subject )
+			incoming_state.add_to_collection_mapping( p, current_subject )
 		else :
 			if s == None : s = current_subject
 			if o == None : o = current_subject
