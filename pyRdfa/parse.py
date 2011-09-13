@@ -160,7 +160,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	incomplete_triples  = []
 	for prop in state.getURI("rel") :
 		if not isinstance(prop,BNode) :
-			if node.hasAttribute("member") :
+			if node.hasAttribute("inlist") :
 				if current_object != None :
 					state.add_to_collection_mapping(prop, current_object)
 				else :
@@ -222,7 +222,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	# Generate the lists, if any...
 	if new_collection and len(state.collection_mapping) != 0 :
 		for prop in state.collection_mapping :
-			bnodes = [ (BNode(), i) for i in state.collection_mapping[prop] ]
+			bnodes = [ (BNode(), r) for r in state.collection_mapping[prop] ]
 			if len(bnodes) == 0 :
 				# should not happen, though
 				continue

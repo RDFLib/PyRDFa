@@ -36,6 +36,7 @@ where:
   -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document)
   -r: report on the details of the profile caching process
   -y: bypass the cache checking, generate a new cache every time
+  -v: perform vocabulary expansion (default: False)
   -g: value can be 'default', 'processor', 'default,processor' or 'processor,default'; controls which graphs are returned
 
 'Filename' can be a local file name or a URI. In case there is no filename, stdin is used.
@@ -57,11 +58,11 @@ output_default_graph 	= True
 output_processor_graph 	= False
 vocab_cache_report      = False
 bypass_vocab_cache      = False
-vocab_expansion         = True
+vocab_expansion         = False
 vocab_cache             = True
 
 try :
-	opts, value = getopt.getopt(sys.argv[1:],"xtnpezsb:g:ry",['graph='])
+	opts, value = getopt.getopt(sys.argv[1:],"vxtnpezsb:g:ry",['graph='])
 	for o,a in opts:
 		if o == "-t" :
 			format = "turtle"
@@ -81,6 +82,8 @@ try :
 			vocab_cache_report = True
 		elif o == "-y" :
 			bypass_vocab_cache = True
+		elif o == "-v" :
+			vocab_expansion = True
 		elif o in ("-g", "--graph") :
 			if a == "processor" :
 				output_default_graph 	= False
