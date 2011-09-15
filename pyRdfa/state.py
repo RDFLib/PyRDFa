@@ -68,7 +68,7 @@ class ExecutionContext :
 	@ivar lang: language tag (possibly None)
 	@ivar term_or_curie: vocabulary management class instance
 	@type term_or_curie: L{termorcurie.TermOrCurie}
-	@ivar collection_mapping: dictionary or array, containing a list of URIs key-ed via properties for lists
+	@ivar list_mapping: dictionary of arrays, containing a list of URIs key-ed via properties for lists
 	@ivar setting_subject: whether the element with that state sets the subject down the line via @resource or @href
 	@ivar node: the node to which this state belongs
 	@type node: DOM node instance
@@ -449,9 +449,18 @@ class ExecutionContext :
 	
 	# -----------------------------------------------------------------------------------------------
 	def reset_list_mapping(self) :
+		"""
+		Reset, ie, create a new empty dictionary for the list mapping.
+		"""
 		self.list_mapping = {}
 		
 	def add_to_list_mapping(self, property, resource) :
+		"""Add a new property-resource on the list mapping structure. The latter is a dictionary of arrays;
+		if the array does not exist yet, it will be created on the fly.
+		
+		@param property: the property URI, used as a key in the dictionary
+		@param resource: the resource to be added to the relevant array in the dictionary.
+		"""
 		if property in self.list_mapping :
 			self.list_mapping[property].append(resource)
 		else :
