@@ -69,6 +69,7 @@ class ExecutionContext :
 	@ivar term_or_curie: vocabulary management class instance
 	@type term_or_curie: L{termorcurie.TermOrCurie}
 	@ivar collection_mapping: dictionary or array, containing a list of URIs key-ed via properties for lists
+	@ivar setting_subject: whether the element with that state sets the subject down the line via @resource or @href
 	@ivar node: the node to which this state belongs
 	@type node: DOM node instance
 	@ivar rdfa_version: RDFa version of the content
@@ -136,7 +137,10 @@ class ExecutionContext :
 			self.rdfa_version		= inherited_state.rdfa_version
 			self.base				= inherited_state.base
 			self.options			= inherited_state.options
-			self.collection_mapping = inherited_state.collection_mapping
+			self.setting_subject    = inherited_state.setting_subject
+						
+			self.list_mapping 		= inherited_state.list_mapping
+			
 			# for generic XML versions the xml:base attribute should be handled
 			if self.options.host_language in accept_xml_base and node.hasAttribute("xml:base") :
 				self.base = remove_frag_id(node.getAttribute("xml:base"))
@@ -144,7 +148,9 @@ class ExecutionContext :
 			# this is the branch called from the very top
 			# get the version
 			# If the version has been set explicitly, that wins!
-			self.collection_mapping = {}
+			self.setting_subject = False
+			
+			self.list_mapping = {}
 			if rdfa_version is not None :
 				self.rdfa_version = rdfa_version
 			else :
@@ -442,13 +448,13 @@ class ExecutionContext :
 	# end getURI
 	
 	# -----------------------------------------------------------------------------------------------
-	def reset_collection_mapping(self) :
-		self.collection_mapping = {}
+	def reset_list_mapping(self) :
+		self.list_mapping = {}
 		
-	def add_to_collection_mapping(self, property, resource) :
-		if property in self.collection_mapping :
-			self.collection_mapping[property].append(resource)
+	def add_to_list_mapping(self, property, resource) :
+		if property in self.list_mapping :
+			self.list_mapping[property].append(resource)
 		else :
-			self.collection_mapping[property] = [ resource ]
+			self.list_mapping[property] = [ resource ]
 
 ####################

@@ -74,7 +74,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		return	
 
 	#---------------------------------------------------------------------------------
-	# calling the host specific massaging of the DOM
+	# calling the host language specific massaging of the DOM
 	if state.options.host_language in host_dom_transforms and node.nodeType == node.ELEMENT_NODE :
 		for func in host_dom_transforms[state.options.host_language] : func(node, state)
 
@@ -113,7 +113,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		if current_subject == None :
 			current_subject = parent_object
 		else :
-			state.reset_collection_mapping()
+			state.reset_list_mapping()
 			new_collection  = True
 
 		# set the object resource
@@ -121,6 +121,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 			current_object = state.getURI("resource")
 		elif node.hasAttribute("href") :
 			current_object = state.getURI("href")
+		state.setting_subject = (current_object != None)
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
@@ -137,16 +138,22 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
+		state.setting_subject = (current_object != None)
 		if current_subject == None :
 			current_subject = parent_object
 		else :
-			state.reset_collection_mapping()
+			state.reset_list_mapping()
 			new_collection  = True
 
 		# in this case no non-literal triples will be generated, so the
 		# only role of the current_object Resource is to be transferred to
 		# the children node
 		current_object = current_subject
+		
+	# Last step, related to the subject setting by somebody else higher up and list management
+	if new_collection == False and incoming_state.setting_subject == True :
+			state.reset_list_mapping()
+			new_collection  = True
 
 	# ---------------------------------------------------------------------
 	## The possible typeof indicates a number of type statements on the new Subject
@@ -159,9 +166,9 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	incomplete_triples  = []
 	for prop in state.getURI("rel") :
 		if not isinstance(prop,BNode) :
-			if node.hasAttribute("inlist") :
+			if node.hasAttribute("onlist") :
 				if current_object != None :
-					state.add_to_collection_mapping(prop, current_object)
+					state.add_to_list_mapping(prop, current_object)
 				else :
 					incomplete_triples.append((None, prop, None))
 			else :
@@ -210,20 +217,20 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	for (s,p,o) in parent_incomplete_triples :
 		if s == None and o == None :
 			# This is an encoded version of a hanging rel for a collection:
-			incoming_state.add_to_collection_mapping( p, current_subject )
+			incoming_state.add_to_list_mapping( p, current_subject )
 		else :
 			if s == None : s = current_subject
 			if o == None : o = current_subject
 			graph.add((s,p,o))
 
-	# Generate the lists, if any...
-	if new_collection and len(state.collection_mapping) != 0 :
-		for prop in state.collection_mapping :
-			heads = [ (BNode(), r) for r in state.collection_mapping[prop] ]
+	# Generate the lists, if any...	
+	if new_collection and len(state.list_mapping) != 0 :
+		for prop in state.list_mapping :
+			heads = [ (BNode(), r) for r in state.list_mapping[prop] ]
 			if len(heads) == 0 :
 				# should not happen, though
 				continue
-			for (b,r) in bnodes :
+			for (b,r) in heads :
 				graph.add( (b, ns_rdf["first"], r) )
 			for i in range(0, len(heads)-1) :
 				graph.add( (heads[i][0], ns_rdf["rest"], heads[i+1][0]) )
