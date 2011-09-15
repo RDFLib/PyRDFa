@@ -181,7 +181,7 @@ def generate_literal(node, graph, subject, state) :
 	# The object may be empty, for example in an ill-defined <meta> element...
 	for prop in props :
 		if not isinstance(prop,BNode) :
-			if node.hasAttribute("onlist") :
+			if state.rdfa_version >= "1.1" and node.hasAttribute("onlist") :
 				state.add_to_list_mapping(prop, object)
 			else :			
 				graph.add( (subject,prop,object) )
