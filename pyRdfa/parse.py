@@ -166,7 +166,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	incomplete_triples  = []
 	for prop in state.getURI("rel") :
 		if not isinstance(prop,BNode) :
-			if state.rdfa_version >= "1.1" and node.hasAttribute("onlist") :
+			if state.rdfa_version >= "1.1" and node.hasAttribute("inlist") :
 				if current_object != None :
 					state.add_to_list_mapping(prop, current_object)
 				else :
