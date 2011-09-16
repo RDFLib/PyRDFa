@@ -103,7 +103,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		# set first the subject
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-		elif node.hasAttribute("src") :
+		elif state.rdfa_version < "1.1" and node.hasAttribute("src") :
 			current_subject = state.getURI("src")
 		elif node.hasAttribute("typeof") :
 			current_subject = BNode()
@@ -121,18 +121,22 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 			current_object = state.getURI("resource")
 		elif node.hasAttribute("href") :
 			current_object = state.getURI("href")
+		elif state.rdfa_version >= "1.1" and node.hasAttribute("src") :
+			current_object = state.getURI("src")
 		state.setting_subject = (current_object != None)
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-		elif node.hasAttribute("src") :
+		elif  state.rdfa_version < "1.1" and node.hasAttribute("src") :
 			current_subject = state.getURI("src")
 		elif node.hasAttribute("resource") :
 			current_subject = state.getURI("resource")
 		elif node.hasAttribute("href") :
 			current_subject = state.getURI("href")
+		elif  state.rdfa_version >= "1.1" and node.hasAttribute("src") :
+			current_subject = state.getURI("src")
 		elif node.hasAttribute("typeof") :
 			current_subject = BNode()
 
