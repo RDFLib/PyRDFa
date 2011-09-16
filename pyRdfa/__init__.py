@@ -75,7 +75,6 @@ add additional 'services' without distoring the core code of RDFa processing.
 
 Some transformations are included in the package and can be used at invocation. These are:
 
- - Special syntax to generate collections or containers. See the description of L{transform.containerscollections} for further details.
  - The 'name' attribute of the 'meta' element is copied into a 'property' attribute of the same element
  - Interpreting the 'openid' references in the header. See L{transform.OpenID} for further details.
  - Implementing the Dublin Core dialect to include DC statements from the header.  See L{transform.DublinCore} for further details.
@@ -597,7 +596,6 @@ def processURI(uri, outputFormat, form={}) :
 	 - C{rfa-version} provides the RDFa version that should be used for distilling. The string should be of the form "1.0", "1.1", etc. Default is the highest version the current package implements.
 	 - C{extras=[true|false]} means that extra, built-in transformers are executed on the DOM tree prior to RDFa processing. Default: false. Alternatively, a finer granurality can be used with the following options:
 	  - C{extras-meta=[true|false]}: the @name attribute for metas are converted into @property for further processing
-	  - C{extras-cc=[true|false]}: containers and collections are generated. See L{transform.containerscollections} for further details.
 	 - C{host_language=[xhtml,html,xml]} : the host language. Used when files are uploaded or text is added verbatim, otherwise the HTTP return header should be used
 	 - C{vocab-cache-report=[true|false]} : whether vocab caching details should be reported
 	 - C{vocab-cache-bypass=[true|false]} : whether vocab caches have to be regenerated every time
@@ -647,8 +645,7 @@ def processURI(uri, outputFormat, form={}) :
 		from pyRdfa.transform.metaname              	import meta_transform
 		from pyRdfa.transform.OpenID                	import OpenID_transform
 		from pyRdfa.transform.DublinCore            	import DC_transform
-		from pyRdfa.transform.containerscollections		import containers_collections
-		transformers = [containers_collections, OpenID_transform, DC_transform, meta_transform]
+		transformers = [OpenID_transform, DC_transform, meta_transform]
 	else :
 		if "extra-meta" in form.keys() and form.getfirst("extra-meta").lower() == "true" :
 			from pyRdfa.transform.metaname import meta_transform
@@ -659,13 +656,6 @@ def processURI(uri, outputFormat, form={}) :
 		if "extra-dc" in form.keys() and form.getfirst("extra-dc").lower() == "true" :
 			from pyRdfa.transform.DublinCore import DC_transform
 			transformers.append(DC_transform)
-		if "extra-cc" in form.keys() and form.getfirst("extra-cc").lower() == "true" :
-			from pyRdfa.transform.containerscollections import containers_collections
-			transformers.append(containers_collections)
-		# This is here only for backward compatibility
-		if "extra-li" in form.keys() and form.getfirst("extra-li").lower() == "true" :
-			from pyRdfa.transform.containerscollections import containers_collections
-			transformers.append(containers_collections)
 
 	output_default_graph 	= True
 	output_processor_graph 	= False
