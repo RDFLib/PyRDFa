@@ -164,7 +164,7 @@ U{W3C® SOFTWARE NOTICE AND LICENSE<href="http://www.w3.org/Consortium/Legal/200
 """
 
 """
-$Id: __init__.py,v 1.44 2011/09/01 11:06:13 ivan Exp $ $Date: 2011/09/01 11:06:13 $
+$Id: __init__.py,v 1.45 2011/09/16 12:26:02 ivan Exp $ $Date: 2011/09/16 12:26:02 $
 
 Thanks to Victor Andrée, who found some intricate bugs, and provided fixes, in the interplay between @prefix and @vocab...
 

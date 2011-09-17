@@ -18,8 +18,8 @@ U{W3C® SOFTWARE NOTICE AND LICENSE<href="http://www.w3.org/Consortium/Legal/200
 """
 
 """
-$Id: state.py,v 1.2 2011/09/01 11:06:13 ivan Exp $
-$Date: 2011/09/01 11:06:13 $
+$Id: state.py,v 1.3 2011/09/16 12:26:02 ivan Exp $
+$Date: 2011/09/16 12:26:02 $
 """
 
 import rdflib

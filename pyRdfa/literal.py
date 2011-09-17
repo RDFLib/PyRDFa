@@ -12,8 +12,8 @@ U{W3C® SOFTWARE NOTICE AND LICENSE<href="http://www.w3.org/Consortium/Legal/200
 """
 
 """
-$Id: literal.py,v 1.1 2011/08/12 10:04:01 ivan Exp $
-$Date: 2011/08/12 10:04:01 $
+$Id: literal.py,v 1.2 2011/09/16 12:26:02 ivan Exp $
+$Date: 2011/09/16 12:26:02 $
 """
 
 import re

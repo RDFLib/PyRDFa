@@ -11,7 +11,6 @@ from pyRdfa 									import pyRdfa
 from pyRdfa.transform.metaname              	import meta_transform
 from pyRdfa.transform.OpenID                	import OpenID_transform
 from pyRdfa.transform.DublinCore            	import DC_transform
-from pyRdfa.transform.containerscollections 	import containers_collections
 from pyRdfa.options								import Options
 
 extraTransformers = [
