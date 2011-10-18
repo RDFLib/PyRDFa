@@ -180,7 +180,7 @@ Thanks to Elias Torrez, who provided with the idea and patches to interface to t
 
 """
 
-__version__ = "3.0.2"
+__version__ = "3.0.3"
 __author__  = 'Ivan Herman'
 __contact__ = 'Ivan Herman, ivan@w3.org'
 __license__ = u'W3C® SOFTWARE NOTICE AND LICENSE, http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231'
