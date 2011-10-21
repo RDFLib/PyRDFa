@@ -33,7 +33,7 @@ where:
   -z: exceptions should be returned as graphs instead of exceptions raised
   -b: give the base URI; if a file name is given, this can be left empty and the file name is used
   -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document)
-  -r: report on the details of the profile caching process
+  -r: report on the details of the vocabulary caching process
   -y: bypass the cache checking, generate a new cache every time
   -v: perform vocabulary expansion (default: False)
   -g: value can be 'default', 'processor', 'default,processor' or 'processor,default'; controls which graphs are returned
