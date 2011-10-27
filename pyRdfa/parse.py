@@ -156,8 +156,8 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		
 	# Last step, related to the subject setting by somebody else higher up and list management
 	if new_collection == False and incoming_state.setting_subject == True :
-			state.reset_list_mapping()
-			new_collection  = True
+		state.reset_list_mapping()
+		new_collection  = True
 
 	# ---------------------------------------------------------------------
 	## The possible typeof indicates a number of type statements on the new Subject
