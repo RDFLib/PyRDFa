@@ -94,7 +94,6 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	# of the @rel/@rev attributes
 	current_subject = None
 	current_object  = None
-	new_collection  = False
 
 	if has_one_of_attributes(node, "rel", "rev")  :
 		# in this case there is the notion of 'left' and 'right' of @rel/@rev
@@ -113,9 +112,8 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		if current_subject == None :
 			current_subject = parent_object
 		else :
-			state.reset_list_mapping()
-			new_collection  = True
-
+			state.reset_list_mapping(origin = current_subject)
+		
 		# set the object resource
 		if node.hasAttribute("resource") :
 			current_object = state.getURI("resource")
@@ -124,6 +122,11 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		elif state.rdfa_version >= "1.1" and node.hasAttribute("src") :
 			current_object = state.getURI("src")
 		state.setting_subject = (current_object != None)
+		
+		if not node.hasAttribute("inlist") and current_object != None :
+			# In this case the newly defined object is, in fact, the head of the list
+			# just reset the whole thing.
+			state.reset_list_mapping(origin = current_object)
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
@@ -146,19 +149,13 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 		if current_subject == None :
 			current_subject = parent_object
 		else :
-			state.reset_list_mapping()
-			new_collection  = True
+			state.reset_list_mapping(origin = current_subject)
 
 		# in this case no non-literal triples will be generated, so the
 		# only role of the current_object Resource is to be transferred to
 		# the children node
 		current_object = current_subject
 		
-	# Last step, related to the subject setting by somebody else higher up and list management
-	if new_collection == False and incoming_state.setting_subject == True :
-		state.reset_list_mapping()
-		new_collection  = True
-
 	# ---------------------------------------------------------------------
 	## The possible typeof indicates a number of type statements on the new Subject
 	for defined_type in state.getURI("typeof") :
@@ -227,20 +224,16 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 			if o == None : o = current_subject
 			graph.add((s,p,o))
 
-	# Generate the lists, if any...	
-	if state.rdfa_version >= "1.1" and new_collection and len(state.list_mapping) != 0 :
-		for prop in state.list_mapping :
-			heads = [ (BNode(), r) for r in state.list_mapping[prop] ]
-			if len(heads) == 0 :
-				# should not happen, though
-				continue
-			for (b,r) in heads :
-				graph.add( (b, ns_rdf["first"], r) )
-			for i in range(0, len(heads)-1) :
-				graph.add( (heads[i][0], ns_rdf["rest"], heads[i+1][0]) )
-				
-			graph.add( (heads[-1][0], ns_rdf["rest"], ns_rdf["nil"]) )
-			graph.add( (current_subject, prop, heads[0][0]) )
+	# Generate the lists, if any and if this is the level where a new list was originally created	
+	if state.rdfa_version >= "1.1" and state.new_list and not state.list_empty() :
+		for prop in state.get_list_props() :
+			vals  = state.get_list_value(prop)
+			heads = [ BNode() for r in vals ] + [ ns_rdf["nil"] ]
+			for i in xrange(0, len(vals)) :
+				graph.add( (heads[i], ns_rdf["first"], vals[i]) )
+				graph.add( (heads[i], ns_rdf["rest"],  heads[i+1]) )
+			# Anchor the list
+			graph.add( (state.get_list_origin(), prop, heads[0]) )
 
 	# -------------------------------------------------------------------
 	# This should be it...

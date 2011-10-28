@@ -54,6 +54,11 @@ import random
 import urlparse
 import urllib
 
+class ListStructure :
+	def __init__(self) :
+		self.mapping = {}
+		self.origin	  = None
+
 #### Core Class definition
 class ExecutionContext :
 	"""State at a specific node, including the current set of namespaces in the RDFLib sense, current language,
@@ -140,6 +145,7 @@ class ExecutionContext :
 			self.setting_subject    = inherited_state.setting_subject
 						
 			self.list_mapping 		= inherited_state.list_mapping
+			self.new_list			= False
 			
 			# for generic XML versions the xml:base attribute should be handled
 			if self.options.host_language in accept_xml_base and node.hasAttribute("xml:base") :
@@ -150,7 +156,9 @@ class ExecutionContext :
 			# If the version has been set explicitly, that wins!
 			self.setting_subject = False
 			
-			self.list_mapping = {}
+			self.list_mapping = ListStructure()
+			self.new_list	  = True
+			
 			if rdfa_version is not None :
 				self.rdfa_version = rdfa_version
 			else :
@@ -448,11 +456,28 @@ class ExecutionContext :
 	# end getURI
 	
 	# -----------------------------------------------------------------------------------------------
-	def reset_list_mapping(self) :
+	def reset_list_mapping(self, origin=None) :
 		"""
 		Reset, ie, create a new empty dictionary for the list mapping.
 		"""
-		self.list_mapping = {}
+		self.list_mapping = ListStructure()
+		if origin: self.set_list_origin(origin)
+		self.new_list = True
+
+	def list_empty(self) :
+		return len(self.list_mapping.mapping) == 0
+		
+	def get_list_props(self) :
+		return self.list_mapping.mapping.keys()
+		
+	def get_list_value(self,prop) :
+		return self.list_mapping.mapping[prop]
+		
+	def set_list_origin(self, origin) :
+		self.list_mapping.origin = origin
+		
+	def get_list_origin(self) :
+		return self.list_mapping.origin
 		
 	def add_to_list_mapping(self, property, resource) :
 		"""Add a new property-resource on the list mapping structure. The latter is a dictionary of arrays;
@@ -461,9 +486,9 @@ class ExecutionContext :
 		@param property: the property URI, used as a key in the dictionary
 		@param resource: the resource to be added to the relevant array in the dictionary.
 		"""
-		if property in self.list_mapping :
-			self.list_mapping[property].append(resource)
+		if property in self.list_mapping.mapping :
+			self.list_mapping.mapping[property].append(resource)
 		else :
-			self.list_mapping[property] = [ resource ]
+			self.list_mapping.mapping[property] = [ resource ]
 
 ####################
