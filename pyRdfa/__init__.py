@@ -591,7 +591,7 @@ def processURI(uri, outputFormat, form={}) :
 
 	The call accepts extra form options (eg, HTTP GET options) as follows:
 	
-	 - C{graph=[default|processor|default,processor|processor,default]} specifying which graphs are returned. Default: default.
+	 - C{graph=[output|processor|output,processor|processor,output]} specifying which graphs are returned. Default: output.
 	 - C{space-preserve=[true|false]} means that plain literals are normalized in terms of white spaces. Default: false.
 	 - C{rfa-version} provides the RDFa version that should be used for distilling. The string should be of the form "1.0", "1.1", etc. Default is the highest version the current package implements.
 	 - C{extras=[true|false]} means that extra, built-in transformers are executed on the DOM tree prior to RDFa processing. Default: false. Alternatively, a finer granurality can be used with the following options:
@@ -664,7 +664,7 @@ def processURI(uri, outputFormat, form={}) :
 		if a == "processor" :
 			output_default_graph 	= False
 			output_processor_graph 	= True
-		elif a == "processor,default" or a == "default,processor" :
+		elif a == "processor,output" or a == "output,processor" :
 			output_processor_graph 	= True
 
 		
