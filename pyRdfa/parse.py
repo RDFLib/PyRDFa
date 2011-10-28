@@ -121,12 +121,29 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 			current_object = state.getURI("href")
 		elif state.rdfa_version >= "1.1" and node.hasAttribute("src") :
 			current_object = state.getURI("src")
-		state.setting_subject = (current_object != None)
 		
 		if not node.hasAttribute("inlist") and current_object != None :
 			# In this case the newly defined object is, in fact, the head of the list
 			# just reset the whole thing.
 			state.reset_list_mapping(origin = current_object)
+
+	elif  state.rdfa_version >= "1.1" and node.hasAttribute("property")  :
+		# this is the case when the property may take hold of @src and friends...
+		if node.hasAttribute("about") :
+			current_subject = state.getURI("about")
+		elif node.hasAttribute("typeof") :
+			current_subject = BNode()
+
+		# get_URI_ref may return None in case of an illegal CURIE, so
+		# we have to be careful here, not use only an 'else'
+		if current_subject == None :
+			current_subject = parent_object
+		else :
+			state.reset_list_mapping(origin = current_subject)
+	
+		current_object = current_subject
+		
+		
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
@@ -145,7 +162,6 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
-		state.setting_subject = (current_object != None)
 		if current_subject == None :
 			current_subject = parent_object
 		else :
@@ -196,7 +212,6 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 	# A particularity of property is that it stops the parsing down the DOM tree if an XML Literal is generated,
 	# because everything down there is part of the generated literal. 
 	if node.hasAttribute("property") :
-		# Generate the literal. It has been put it into a separate module to make it more managable
 		generate_literal(node, graph, current_subject, state)
 
 	# ----------------------------------------------------------------------

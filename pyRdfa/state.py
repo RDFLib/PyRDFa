@@ -142,7 +142,6 @@ class ExecutionContext :
 			self.rdfa_version		= inherited_state.rdfa_version
 			self.base				= inherited_state.base
 			self.options			= inherited_state.options
-			self.setting_subject    = inherited_state.setting_subject
 						
 			self.list_mapping 		= inherited_state.list_mapping
 			self.new_list			= False
@@ -151,11 +150,7 @@ class ExecutionContext :
 			if self.options.host_language in accept_xml_base and node.hasAttribute("xml:base") :
 				self.base = remove_frag_id(node.getAttribute("xml:base"))
 		else :
-			# this is the branch called from the very top
-			# get the version
-			# If the version has been set explicitly, that wins!
-			self.setting_subject = False
-			
+			# this is the branch called from the very top			
 			self.list_mapping = ListStructure()
 			self.new_list	  = True
 			

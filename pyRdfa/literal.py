@@ -27,7 +27,7 @@ else :
 	from rdflib.RDF	import RDFNS as ns_rdf
 
 from pyRdfa	import IncorrectBlankNodeUsage, err_no_blank_node, ns_xsd 
-
+from pyRdfa.utils import has_one_of_attributes
 
 XMLLiteral = ns_rdf["XMLLiteral"]
 
@@ -41,7 +41,7 @@ def __putBackEntities(str) :
 	return str.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
 #### The real meat...
-def generate_literal(node, graph, subject, state) :
+def generate_literal(node, graph, subject, state, ) :
 	"""Generate the literal, taking into account datatype, etc.
 	Note: this method is called only if the C{@property} is indeed present, no need to check. 
 	
@@ -116,6 +116,7 @@ def generate_literal(node, graph, subject, state) :
 		# If XML Literals must be canonicalized for space, then this is the return line:
 		#return re.sub(r'(\r| |\n|\t)+'," ",rc).strip()
 	# end getXMLLiteral
+
 	def _create_Literal(val, datatype = '', lang = '') :
 		"""
 		Create a literal, taking into account the datatype and language.
@@ -127,59 +128,67 @@ def generate_literal(node, graph, subject, state) :
 		#	return Literal(val)
 		else :
 			return Literal(val, datatype=datatype)
+			
+	#########################################################################		
+	# See if the target is _not_ a literal
+	if has_one_of_attributes(node, "resource", "href", "src") :
+		if node.hasAttribute("resource") :
+			object = state.getURI("resource")
+		elif node.hasAttribute("href") :
+			object = state.getURI("href")
+		elif node.hasAttribute("src") :
+			object = state.getURI("src")
+			
+	else :
+		# We have to generate a literal indeed.
+		# Get, if exists, the value of @datatype
+		datatype = ''
+		dtset    = False
+		if node.hasAttribute("datatype") :
+			dtset = True
+			dt = node.getAttribute("datatype")
+			if dt != "" :
+				datatype = state.getURI("datatype")
 	
-	# Get the Property URI-s
-	props = state.getURI("property")
-
-	# Get, if exists, the value of @datatype
-	datatype = ''
-	dtset    = False
-	if node.hasAttribute("datatype") :
-		dtset = True
-		dt = node.getAttribute("datatype")
-		if dt != "" :
-			datatype = state.getURI("datatype")
-
-	if state.lang != None :
-		lang = state.lang
-	else :
-		lang = ''
-		
-	# The simple case: separate @content attribute
-	if node.hasAttribute("content") :
-		val = node.getAttribute("content")
-		# Handling the automatic uri conversion case
-		if dtset == False :
-			object = Literal(val, lang=lang)
+		if state.lang != None :
+			lang = state.lang
 		else :
-			object = _create_Literal(val, datatype=datatype, lang=lang)
-		# The value of datatype has been set, and the keyword paramaters take care of the rest
-	else :
-		# see if there *is* a datatype (even if it is empty!)
-		if dtset :
-			# yep. The Literal content is the pure text part of the current element:
-			# We have to check whether the specified datatype is, in fact, an
-			# explicit XML Literal
-			if datatype == XMLLiteral :
-				object = Literal(_get_XML_literal(node),datatype=XMLLiteral)
-				retval = False
-			object = _create_Literal(_get_literal(node), datatype=datatype, lang=lang)
+			lang = ''
+
+		# The simple case: separate @content attribute
+		if node.hasAttribute("content") :
+			val = node.getAttribute("content")
+			# Handling the automatic uri conversion case
+			if dtset == False :
+				object = Literal(val, lang=lang)
+			else :
+				object = _create_Literal(val, datatype=datatype, lang=lang)
+			# The value of datatype has been set, and the keyword paramaters take care of the rest
 		else :
-			if state.rdfa_version >= "1.1" :
-				object = _create_Literal(_get_literal(node), lang=lang)
-			else :				
-				# no controlling @datatype. We have to see if there is markup in the contained
-				# element
-				if True in [ n.nodeType == node.ELEMENT_NODE for n in node.childNodes ] :
-					# yep, and XML Literal should be generated
-					object = _create_Literal(_get_XML_literal(node), datatype=XMLLiteral)
-				else :
-					# At this point, there might be entities in the string that are returned as real characters by the dom
-					# implementation. That should be turned back
+			# see if there *is* a datatype (even if it is empty!)
+			if dtset :
+				# yep. The Literal content is the pure text part of the current element:
+				# We have to check whether the specified datatype is, in fact, an
+				# explicit XML Literal
+				if datatype == XMLLiteral :
+					object = Literal(_get_XML_literal(node),datatype=XMLLiteral)
+					retval = False
+				object = _create_Literal(_get_literal(node), datatype=datatype, lang=lang)
+			else :
+				if state.rdfa_version >= "1.1" :
 					object = _create_Literal(_get_literal(node), lang=lang)
+				else :				
+					# no controlling @datatype. We have to see if there is markup in the contained
+					# element
+					if True in [ n.nodeType == node.ELEMENT_NODE for n in node.childNodes ] :
+						# yep, and XML Literal should be generated
+						object = _create_Literal(_get_XML_literal(node), datatype=XMLLiteral)
+					else :
+						# At this point, there might be entities in the string that are returned as real characters by the dom
+						# implementation. That should be turned back
+						object = _create_Literal(_get_literal(node), lang=lang)
 
-	# The object may be empty, for example in an ill-defined <meta> element...
-	for prop in props :
+	for prop in state.getURI("property") :
 		if not isinstance(prop,BNode) :
 			if state.rdfa_version >= "1.1" and node.hasAttribute("inlist") :
 				state.add_to_list_mapping(prop, object)
