@@ -24,13 +24,12 @@ extraTransformers = [
 ###########################################	
 
 
-usageText="""Usage: %s -[xtnpezsb:g:] [filename[s]]
+usageText="""Usage: %s -[vxtnpzsb:g:ry] [filename[s]]
 where:
   -x: output format RDF/XML
   -t: output format Turtle (default)
   -n: output format N Triples
   -p: output format pretty RDF/XML
-  -e: collections and containers are generated (non-standard feature, default: False)
   -z: exceptions should be returned as graphs instead of exceptions raised
   -b: give the base URI; if a file name is given, this can be left empty and the file name is used
   -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document)
@@ -62,7 +61,7 @@ vocab_expansion         = False
 vocab_cache             = True
 
 try :
-	opts, value = getopt.getopt(sys.argv[1:],"vxtnpezsb:g:ry",['graph='])
+	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ry",['graph='])
 	for o,a in opts:
 		if o == "-t" :
 			format = "turtle"
@@ -70,8 +69,6 @@ try :
 			format = "nt"
 		elif o == "-p" or o == "-x":
 			format = "pretty-xml"
-		elif o == "-e" :
-			extras += extraTransformers
 		elif o == "-z" :
 			rdfOutput = True
 		elif o == "-b" :
@@ -103,7 +100,6 @@ except :
 options = Options(output_default_graph = output_default_graph,
 				  output_processor_graph = output_processor_graph,
 				  space_preserve=space_preserve,
-				  transformers=extras,
 				  vocab_cache_report=vocab_cache_report,
 				  bypass_vocab_cache=bypass_vocab_cache,
 				  vocab_expansion = vocab_expansion,
