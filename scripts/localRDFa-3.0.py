@@ -12,19 +12,21 @@ from pyRdfa 									import pyRdfa
 from pyRdfa.transform.metaname              	import meta_transform
 from pyRdfa.transform.OpenID                	import OpenID_transform
 from pyRdfa.transform.DublinCore            	import DC_transform
+from pyRdfa.transform.lite 						import lite_prune
+
 from pyRdfa.options								import Options
 
 extraTransformers = [
 	# containers_collections,
 	#OpenID_transform,
 	#DC_transform,
-	meta_transform
+	# meta_transform
 ]
 		
 ###########################################	
 
 
-usageText="""Usage: %s -[vxtnpzsb:g:ry] [filename[s]]
+usageText="""Usage: %s -[vxtnpzsb:g:ryl] [filename[s]]
 where:
   -x: output format RDF/XML
   -t: output format Turtle (default)
@@ -33,6 +35,7 @@ where:
   -z: exceptions should be returned as graphs instead of exceptions raised
   -b: give the base URI; if a file name is given, this can be left empty and the file name is used
   -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document)
+  -l: run in RDFa 1.1 Lite mode
   -r: report on the details of the vocabulary caching process
   -y: bypass the cache checking, generate a new cache every time
   -v: perform vocabulary expansion (default: False)
@@ -61,7 +64,7 @@ vocab_expansion         = False
 vocab_cache             = True
 
 try :
-	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ry",['graph='])
+	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ryl",['graph='])
 	for o,a in opts:
 		if o == "-t" :
 			format = "turtle"
@@ -75,8 +78,10 @@ try :
 			base = a
 		elif o == "-s" :
 			space_preserve = False
+		elif o == "-l" :
+			extras.append(lite_prune)
 		elif o == "-r" :
-			vocab_cache_report = True
+			vocab_cache_report = True			
 		elif o == "-v" :
 			vocab_expansion = True
 		elif o == "-y" :
@@ -100,8 +105,9 @@ except :
 options = Options(output_default_graph = output_default_graph,
 				  output_processor_graph = output_processor_graph,
 				  space_preserve=space_preserve,
-				  vocab_cache_report=vocab_cache_report,
-				  bypass_vocab_cache=bypass_vocab_cache,
+				  vocab_cache_report = vocab_cache_report,
+				  bypass_vocab_cache = bypass_vocab_cache,
+				  transformers = extras
 				  vocab_expansion = vocab_expansion,
 				  vocab_cache = vocab_cache
 )

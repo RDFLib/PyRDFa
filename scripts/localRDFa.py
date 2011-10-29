@@ -11,19 +11,20 @@ from pyRdfa 									import pyRdfa
 from pyRdfa.transform.metaname              	import meta_transform
 from pyRdfa.transform.OpenID                	import OpenID_transform
 from pyRdfa.transform.DublinCore            	import DC_transform
-from pyRdfa.options								import Options
+from pyRdfa.transform.lite 						import lite_prune
 
+from pyRdfa.options								import Options
 extraTransformers = [
 	# containers_collections,
 	# OpenID_transform,
 	# DC_transform,
-	meta_transform
+	# meta_transform
 ]
 		
 ###########################################	
 
 
-usageText="""Usage: %s -[vxtnpzsb:g:ry] [filename[s]]
+usageText="""Usage: %s -[vxtnpzsb:g:ryl] [filename[s]]
 where:
   -x: output format RDF/XML
   -t: output format Turtle (default)
@@ -35,7 +36,8 @@ where:
   -r: report on the details of the vocabulary caching process
   -y: bypass the cache checking, generate a new cache every time
   -v: perform vocabulary expansion (default: False)
-  -g: value can be 'default', 'processor', 'default,processor' or 'processor,default'; controls which graphs are returned
+  -l: run in RDFa 1.1 Lite mode (default: False)
+  -g: value can be 'output', 'processor', 'output,processor' or 'processor,output'; controls which graphs are returned
 
 'Filename' can be a local file name or a URI. In case there is no filename, stdin is used.
 
@@ -60,7 +62,7 @@ vocab_expansion         = False
 vocab_cache             = True
 
 try :
-	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ry",['graph='])
+	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ryl",['graph='])
 	for o,a in opts:
 		if o == "-t" :
 			format = "turtle"
@@ -74,6 +76,8 @@ try :
 			base = a
 		elif o == "-s" :
 			space_preserve = False
+		elif o == "-l" :
+			extras.append(lite_prune)
 		elif o == "-r" :
 			vocab_cache_report = True
 		elif o == "-y" :
@@ -84,7 +88,7 @@ try :
 			if a == "processor" :
 				output_default_graph 	= False
 				output_processor_graph 	= True
-			elif a == "processor,default" or a == "default,processor" :
+			elif a == "processor,output" or a == "output,processor" :
 				output_processor_graph 	= True
 			elif a == "default" :				
 				output_default_graph 	= True
@@ -98,9 +102,10 @@ except :
 
 options = Options(output_default_graph = output_default_graph,
 				  output_processor_graph = output_processor_graph,
-				  space_preserve=space_preserve,
-				  vocab_cache_report=vocab_cache_report,
-				  bypass_vocab_cache=bypass_vocab_cache,
+				  space_preserve = space_preserve,
+				  vocab_cache_report = vocab_cache_report,
+				  bypass_vocab_cache = bypass_vocab_cache,
+				  transformers = extras
 				  vocab_expansion = vocab_expansion,
 				  vocab_cache = vocab_cache
 )

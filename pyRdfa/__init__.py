@@ -641,15 +641,21 @@ def processURI(uri, outputFormat, form={}) :
 		media_type = ""
 		
 	transformers = []
+	
+	if "rdfa-lite" in form.keys() and form.getfirst("rdfa-lite").lower() == "true" :
+		from pyRdfa.transform.lite import lite_prune
+		transformers.append(lite_prune)
+
 	if "extras" in form.keys() and form.getfirst("extras").lower() == "true" :
 		from pyRdfa.transform.metaname              	import meta_transform
 		from pyRdfa.transform.OpenID                	import OpenID_transform
 		from pyRdfa.transform.DublinCore            	import DC_transform
-		transformers = [OpenID_transform, DC_transform, meta_transform]
+		for t in [OpenID_transform, DC_transform, meta_transform] :
+			transformers.append(t)
 	else :
 		if "extra-meta" in form.keys() and form.getfirst("extra-meta").lower() == "true" :
 			from pyRdfa.transform.metaname import meta_transform
-			transformers.append(metaname)
+			transformers.append(meta_transform)
 		if "extra-openid" in form.keys() and form.getfirst("extra-openid").lower() == "true" :
 			from pyRdfa.transform.OpenID import OpenID_transform
 			transformers.append(OpenID_transform)
