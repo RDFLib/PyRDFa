@@ -131,14 +131,15 @@ def generate_literal(node, graph, subject, state ) :
 			
 	#########################################################################		
 	# See if the target is _not_ a literal
-	if state.rdfa_version >= "1.1"  and has_one_of_attributes(node, "resource", "href", "src") and not has_one_of_attributes(node, "content", "datatype") :
+	irirefs = ("resource", "href", "src")
+	noiri = ("content", "datatype", "rel", "rev")
+	if state.rdfa_version >= "1.1" and has_one_of_attributes(node, irirefs) and not has_one_of_attributes(node, noiri ) :
 		if node.hasAttribute("resource") :
 			object = state.getURI("resource")
 		elif node.hasAttribute("href") :
 			object = state.getURI("href")
 		elif node.hasAttribute("src") :
 			object = state.getURI("src")
-			
 	else :
 		# We have to generate a literal indeed.
 		# Get, if exists, the value of @datatype
