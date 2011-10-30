@@ -127,7 +127,7 @@ def parse_one_node(node, graph, parent_object, incoming_state, parent_incomplete
 			# just reset the whole thing.
 			state.reset_list_mapping(origin = current_object)
 
-	elif  state.rdfa_version >= "1.1" and node.hasAttribute("property")  :
+	elif  state.rdfa_version >= "1.1" and node.hasAttribute("property") and not has_one_of_attributes(node, "content","datatype") :
 		# this is the case when the property may take hold of @src and friends...
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")

@@ -41,7 +41,7 @@ def __putBackEntities(str) :
 	return str.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
 #### The real meat...
-def generate_literal(node, graph, subject, state, ) :
+def generate_literal(node, graph, subject, state ) :
 	"""Generate the literal, taking into account datatype, etc.
 	Note: this method is called only if the C{@property} is indeed present, no need to check. 
 	
@@ -131,7 +131,7 @@ def generate_literal(node, graph, subject, state, ) :
 			
 	#########################################################################		
 	# See if the target is _not_ a literal
-	if has_one_of_attributes(node, "resource", "href", "src") :
+	if state.rdfa_version >= "1.1"  and has_one_of_attributes(node, "resource", "href", "src") and not has_one_of_attributes(node, "content", "datatype") :
 		if node.hasAttribute("resource") :
 			object = state.getURI("resource")
 		elif node.hasAttribute("href") :
