@@ -55,13 +55,11 @@ class ProcessProperty :
 	
 	def generate_1_1(self) :
 		"""Generate the property object, 1.1 version"""
-		
-		object = None
 				
 		#########################################################################		
 		# See if the target is _not_ a literal
 		irirefs = ("resource", "href", "src")
-		noiri = ("content", "datatype", "rel", "rev")
+		noiri   = ("content", "datatype", "rel", "rev")
 		if has_one_of_attributes(self.node, irirefs) and not has_one_of_attributes(self.node, noiri ) :
 			if self.node.hasAttribute("resource") :
 				object = self.state.getURI("resource")
@@ -69,6 +67,8 @@ class ProcessProperty :
 				object = self.state.getURI("href")
 			elif node.hasAttribute("src") :
 				object = self.state.getURI("src")
+			else :
+				object = None
 		else :
 			# We have to generate a literal indeed.
 			# Get, if exists, the value of @datatype
