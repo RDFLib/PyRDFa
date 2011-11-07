@@ -133,13 +133,7 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		# set first the subject
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-			#@@@@@@
 			if node.hasAttribute("typeof") : typed_resource = current_subject
-			#@@@@@@
-		#@@@@@@@@@@
-		#elif node.hasAttribute("typeof") :
-		#	current_subject = BNode()
-		#@@@@@@@@@@
 			
 		# get_URI may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
@@ -149,19 +143,12 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 			state.reset_list_mapping(origin = current_subject)
 		
 		# set the object resource
-		if node.hasAttribute("resource") :
-			current_object = state.getURI("resource")
-		elif node.hasAttribute("href") :
-			current_object = state.getURI("href")
-		elif node.hasAttribute("src") :
-			current_object = state.getURI("src")
+		current_object = state.getResource("resource", "href", "src")
 			
-		#@@@@@@@@
 		if node.hasAttribute("typeof") and not node.hasAttribute("about") :
 			if current_object == None :
 				current_object = BNode()
 			typed_resource = current_object
-		#@@@@@@@@
 		
 		if not node.hasAttribute("inlist") and current_object != None :
 			# In this case the newly defined object is, in fact, the head of the list
@@ -172,13 +159,7 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		# this is the case when the property may take hold of @src and friends...
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-			#@@@@@@
 			if node.hasAttribute("typeof") : typed_resource = current_subject
-			#@@@@@@
-		#@@@@@@@@
-		#elif node.hasAttribute("typeof") :
-		#	current_subject = BNode()
-		#@@@@@@@@
 
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
@@ -187,43 +168,26 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		else :
 			state.reset_list_mapping(origin = current_subject)
 
-		#@@@@@@@@
 		if node.hasAttribute("typeof") :
-			if node.hasAttribute("resource") :
-				typed_resource = state.getURI("resource")
-			elif node.hasAttribute("href") :
-				typed_resource = state.getURI("href")
-			elif node.hasAttribute("src") :
-				typed_resource = state.getURI("src")
+			typed_resource = state.getResource("resource", "href", "src")
 			if typed_resource == None :
 				typed_resource = BNode()
 			current_object = typed_resource
 		else :
 			current_object = current_subject
-		#@@@@@@@@
-
-		#@@@@@@@@
-		#current_object = current_subject
-		#@@@@@@@@
-		
+			
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
-		if node.hasAttribute("about") :
-			current_subject = state.getURI("about")
-		elif node.hasAttribute("resource") :
-			current_subject = state.getURI("resource")
-		elif node.hasAttribute("href") :
-			current_subject = state.getURI("href")
-		elif  node.hasAttribute("src") :
-			current_subject = state.getURI("src")
-		elif node.hasAttribute("typeof") :
-			current_subject = BNode()
+		current_subject = state.getResource("about", "resource", "href", "src")
 			
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
-			current_subject = parent_object
+			if node.hasAttribute("typeof") :
+				current_subject = BNode()
+			else :
+				current_subject = parent_object
 		else :
 			state.reset_list_mapping(origin = current_subject)
 
@@ -231,21 +195,14 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		# only role of the current_object Resource is to be transferred to
 		# the children node
 		current_object = current_subject
-		#@@@@@
 		if node.hasAttribute("typeof") : typed_resource = current_subject
-		#@@@@@
 		
 	# ---------------------------------------------------------------------
-	## The possible typeof indicates a number of type statements on the new Subject
+	## The possible typeof indicates a number of type statements on the typed resource
 	for defined_type in state.getURI("typeof") :
-		#@@@@@@@@
 		if typed_resource :
 			graph.add((typed_resource, ns_rdf["type"], defined_type))
-		#@@@@@@@@
-		
-		#@@@@@@@@
-		#graph.add((current_subject, ns_rdf["type"], defined_type))
-		#@@@@@@@@
+
 	# ---------------------------------------------------------------------
 	# In case of @rel/@rev, either triples or incomplete triples are generated
 	# the (possible) incomplete triples are collected, to be forwarded to the children
@@ -281,14 +238,6 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 	# A particularity of property is that it stops the parsing down the DOM tree if an XML Literal is generated,
 	# because everything down there is part of the generated literal. 
 	if node.hasAttribute("property") :
-		# Gregg>>>>
-		#if prop_object :
-		#	for prop in state.getURI("property") :
-		#		graph.add( (parent_object, prop, prop_object) )
-		#else :
-		#	generate_literal(node, graph, current_subject, state)
-		#<<<<
-			
 		ProcessProperty(node, graph, current_subject, state, typed_resource).generate_1_1()
 
 	# ----------------------------------------------------------------------
@@ -391,45 +340,33 @@ def _parse_1_0(node, graph, parent_object, incoming_state, parent_incomplete_tri
 	if has_one_of_attributes(node, "rel", "rev")  :
 		# in this case there is the notion of 'left' and 'right' of @rel/@rev
 		# in establishing the new Subject and the objectResource
-
-		# set first the subject
-		if node.hasAttribute("about") :
-			current_subject = state.getURI("about")
-		elif node.hasAttribute("src") :
-			current_subject = state.getURI("src")
-		elif node.hasAttribute("typeof") :
-			current_subject = BNode()
+		current_subject = state.getResource("about","src")
 			
 		# get_URI may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
-			current_subject = parent_object
+			if node.hasAttribute("typeof") :
+				current_subject = BNode()
+			else :
+				current_subject = parent_object
 		else :
 			state.reset_list_mapping(origin = current_subject)
 		
 		# set the object resource
-		if node.hasAttribute("resource") :
-			current_object = state.getURI("resource")
-		elif node.hasAttribute("href") :
-			current_object = state.getURI("href")
+		current_object = state.getResource("resource", "href")
 		
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
-		if node.hasAttribute("about") :
-			current_subject = state.getURI("about")
-		elif  node.hasAttribute("src") :
-			current_subject = state.getURI("src")
-		elif node.hasAttribute("resource") :
-			current_subject = state.getURI("resource")
-		elif node.hasAttribute("href") :
-			current_subject = state.getURI("href")
-		elif node.hasAttribute("typeof") :
-			current_subject = BNode()
-
+		current_subject = state.getResource("about", "src", "resource", "href")
+		
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
+			if node.hasAttribute("typeof") :
+				current_subject = BNode()
+			else :
+				current_subject = parent_object
 			current_subject = parent_object
 		else :
 			state.reset_list_mapping(origin = current_subject)

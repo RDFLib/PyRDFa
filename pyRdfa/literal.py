@@ -62,16 +62,9 @@ class ProcessProperty :
 		# See if the target is _not_ a literal
 		irirefs = ("resource", "href", "src")
 		noiri   = ("content", "datatype", "rel", "rev")
-		if has_one_of_attributes(self.node, irirefs) and not has_one_of_attributes(self.node, noiri ) :
-			if self.node.hasAttribute("resource") :
-				object = self.state.getURI("resource")
-			elif self.node.hasAttribute("href") :
-				object = self.state.getURI("href")
-			elif self.node.hasAttribute("src") :
-				object = self.state.getURI("src")
-			else :
-				object = None
-		elif has_one_of_attributes(self.node, "typeof") and not has_one_of_attributes(self.node, noiri ) and self.typed_resource != None :
+		if has_one_of_attributes(self.node, irirefs) and not has_one_of_attributes(self.node, noiri) :
+			object = self.state.getResource(irirefs)
+		elif has_one_of_attributes(self.node, "typeof") and not has_one_of_attributes(self.node, noiri) and self.typed_resource != None :
 			object = self.typed_resource
 		else :
 			# We have to generate a literal indeed.
