@@ -124,7 +124,7 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 	# of the @rel/@rev attributes
 	current_subject = None
 	current_object  = None
-	prop_object		= None
+	typed_resource	= None
 
 	if has_one_of_attributes(node, "rel", "rev")  :
 		# in this case there is the notion of 'left' and 'right' of @rel/@rev
@@ -133,8 +133,13 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		# set first the subject
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-		elif node.hasAttribute("typeof") :
-			current_subject = BNode()
+			#@@@@@@
+			if node.hasAttribute("typeof") : typed_resource = current_subject
+			#@@@@@@
+		#@@@@@@@@@@
+		#elif node.hasAttribute("typeof") :
+		#	current_subject = BNode()
+		#@@@@@@@@@@
 			
 		# get_URI may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
@@ -150,18 +155,30 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 			current_object = state.getURI("href")
 		elif node.hasAttribute("src") :
 			current_object = state.getURI("src")
+			
+		#@@@@@@@@
+		if node.hasAttribute("typeof") and not node.hasAttribute("about") :
+			if current_object == None :
+				current_object = BNode()
+			typed_resource = current_object
+		#@@@@@@@@
 		
 		if not node.hasAttribute("inlist") and current_object != None :
 			# In this case the newly defined object is, in fact, the head of the list
 			# just reset the whole thing.
 			state.reset_list_mapping(origin = current_object)
 
-	elif  node.hasAttribute("property") and not has_one_of_attributes(node, "content","datatype") :
+	elif  node.hasAttribute("property") and not has_one_of_attributes(node, "content", "datatype") :
 		# this is the case when the property may take hold of @src and friends...
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-		elif node.hasAttribute("typeof") :
-			current_subject = BNode()
+			#@@@@@@
+			if node.hasAttribute("typeof") : typed_resource = current_subject
+			#@@@@@@
+		#@@@@@@@@
+		#elif node.hasAttribute("typeof") :
+		#	current_subject = BNode()
+		#@@@@@@@@
 
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
@@ -169,14 +186,31 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 			current_subject = parent_object
 		else :
 			state.reset_list_mapping(origin = current_subject)
-		current_object = current_subject
+
+		#@@@@@@@@
+		if node.hasAttribute("typeof") :
+			if node.hasAttribute("resource") :
+				typed_resource = state.getURI("resource")
+			elif node.hasAttribute("href") :
+				typed_resource = state.getURI("href")
+			elif node.hasAttribute("src") :
+				typed_resource = state.getURI("src")
+			if typed_resource == None :
+				typed_resource = BNode()
+			current_object = typed_resource
+		else :
+			current_object = current_subject
+		#@@@@@@@@
+
+		#@@@@@@@@
+		#current_object = current_subject
+		#@@@@@@@@
+		
 	else :
 		# in this case all the various 'resource' setting attributes
 		# behave identically, though they also have their own priority
 		if node.hasAttribute("about") :
 			current_subject = state.getURI("about")
-		elif  state.rdfa_version < "1.1" and node.hasAttribute("src") :
-			current_subject = state.getURI("src")
 		elif node.hasAttribute("resource") :
 			current_subject = state.getURI("resource")
 		elif node.hasAttribute("href") :
@@ -185,7 +219,7 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 			current_subject = state.getURI("src")
 		elif node.hasAttribute("typeof") :
 			current_subject = BNode()
-
+			
 		# get_URI_ref may return None in case of an illegal CURIE, so
 		# we have to be careful here, not use only an 'else'
 		if current_subject == None :
@@ -197,12 +231,21 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		# only role of the current_object Resource is to be transferred to
 		# the children node
 		current_object = current_subject
+		#@@@@@
+		if node.hasAttribute("typeof") : typed_resource = current_subject
+		#@@@@@
 		
 	# ---------------------------------------------------------------------
 	## The possible typeof indicates a number of type statements on the new Subject
 	for defined_type in state.getURI("typeof") :
-		graph.add((current_subject, ns_rdf["type"], defined_type))
-
+		#@@@@@@@@
+		if typed_resource :
+			graph.add((typed_resource, ns_rdf["type"], defined_type))
+		#@@@@@@@@
+		
+		#@@@@@@@@
+		#graph.add((current_subject, ns_rdf["type"], defined_type))
+		#@@@@@@@@
 	# ---------------------------------------------------------------------
 	# In case of @rel/@rev, either triples or incomplete triples are generated
 	# the (possible) incomplete triples are collected, to be forwarded to the children
@@ -246,7 +289,7 @@ def _parse_1_1(node, graph, parent_object, incoming_state, parent_incomplete_tri
 		#	generate_literal(node, graph, current_subject, state)
 		#<<<<
 			
-		ProcessProperty(node, graph, current_subject, state).generate_1_1()
+		ProcessProperty(node, graph, current_subject, state, typed_resource).generate_1_1()
 
 	# ----------------------------------------------------------------------
 	# Setting the current object to a bnode is setting up a possible resource
