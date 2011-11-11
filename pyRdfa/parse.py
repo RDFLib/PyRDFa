@@ -22,7 +22,7 @@ is stopped (on the whole subtree)
 import sys
 
 from pyRdfa.state   		import ExecutionContext
-from pyRdfa.literal 		import ProcessProperty
+from pyRdfa.property 		import ProcessProperty
 from pyRdfa.embeddedRDF	 	import handle_embeddedRDF
 from pyRdfa.host			import HostLanguage, host_dom_transforms, accept_embedded_rdf
 
