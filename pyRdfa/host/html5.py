@@ -22,12 +22,18 @@ import re
 datetime_type 	= "http://www.w3.org/2001/XMLSchema#dateTime"
 time_type 	 	= "http://www.w3.org/2001/XMLSchema#time"
 date_type 	 	= "http://www.w3.org/2001/XMLSchema#date"
+date_gYear		= "http://www.w3.org/2001/XMLSchema#gYear"
+date_gYearMonth	= "http://www.w3.org/2001/XMLSchema#gYearMonth"
+date_gMonthDay	= "http://www.w3.org/2001/XMLSchema#gMonthDay"
 plain			= "plain"
 
 _formats = {
-    date_type      : [ "%Y-%m-%d" ],
-    time_type      : [ "%H:%M", "%H:%M:%S", "%H:%M:%S.%f" ],
-    datetime_type  : [ "%Y-%m-%dT%H:%M", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%MZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ" ],
+	date_gMonthDay	: [ "%m-%d" ],
+	date_gYearMonth	: [ "%Y-%m"],
+	date_gYear     	: [ "%Y" ],
+	date_type      	: [ "%Y-%m-%d" ],
+	time_type      	: [ "%H:%M", "%H:%M:%S", "%H:%M:%S.%f" ],
+	datetime_type  	: [ "%Y-%m-%dT%H:%M", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%MZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ" ],
 }
 
 def _format_test(string) :
