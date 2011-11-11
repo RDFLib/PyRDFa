@@ -53,6 +53,7 @@ import re
 import random
 import urlparse
 import urllib
+from types import *
 
 class ListStructure :
 	def __init__(self) :
@@ -449,6 +450,23 @@ class ExecutionContext :
 			retval = func(self, val.strip())
 		return retval
 	# end getURI
+	
+	def getResource(self, *args) :
+		"""Get single resources from several different attributes. The first one that returns a valid URI wins.
+		@param args: variable list of attribute names, or a single attribute being a list itself.
+		@return: an RDFLib URIRef instance (or None) :
+		"""
+		if len(args) == 0 :
+			return None
+		if isinstance(args[0], TupleType) or isinstance(args[0],ListType) :
+			rargs = args[0]
+		else :
+			rargs = args
+			
+		for resource in rargs :
+			uri = self.getURI(resource)
+			if uri != None : return uri
+		return None
 	
 	# -----------------------------------------------------------------------------------------------
 	def reset_list_mapping(self, origin=None) :
