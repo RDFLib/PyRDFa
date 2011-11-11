@@ -11,7 +11,7 @@ U{W3C® SOFTWARE NOTICE AND LICENSE<href="http://www.w3.org/Consortium/Legal/200
 $Date: 2011/08/12 10:10:33 $
 """
 
-non_lite_attributes = ["resource","inlist","datatype","rev"]
+non_lite_attributes = ["resource","inlist","datatype","rev", "rel"]
 
 def lite_prune(top, options) :
 	"""
