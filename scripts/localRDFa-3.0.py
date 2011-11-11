@@ -39,7 +39,7 @@ where:
   -r: report on the details of the vocabulary caching process
   -y: bypass the cache checking, generate a new cache every time
   -v: perform vocabulary expansion (default: False)
-  -g: value can be 'default', 'processor', 'default,processor' or 'processor,default'; controls which graphs are returned
+  -g: value can be 'default', 'processor', 'output,processor' or 'processor,output'; controls which graphs are returned
 
 'Filename' can be a local file name or a URI. In case there is no filename, stdin is used.
 
@@ -57,7 +57,7 @@ base           = ""
 value          = []
 rdfOutput	   = False
 output_default_graph 	= True
-output_processor_graph 	= False
+output_processor_graph 	= True
 vocab_cache_report      = False
 bypass_vocab_cache      = False
 vocab_expansion         = False
@@ -107,10 +107,11 @@ options = Options(output_default_graph = output_default_graph,
 				  space_preserve=space_preserve,
 				  vocab_cache_report = vocab_cache_report,
 				  bypass_vocab_cache = bypass_vocab_cache,
-				  transformers = extras
+				  transformers = extras,
 				  vocab_expansion = vocab_expansion,
 				  vocab_cache = vocab_cache
 )
+
 processor = pyRdfa(options, base)
 if len(value) >= 1 :
 	print processor.rdf_from_sources(value, outputFormat = format, rdfOutput = rdfOutput)

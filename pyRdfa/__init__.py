@@ -518,6 +518,7 @@ class pyRdfa :
 					tog.bind(k,ns)
 			options.reset_processor_graph()
 			return tog
+		
 		try :
 			# First, open the source...
 			input = self._get_input(name)

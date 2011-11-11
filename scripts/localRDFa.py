@@ -105,7 +105,7 @@ options = Options(output_default_graph = output_default_graph,
 				  space_preserve = space_preserve,
 				  vocab_cache_report = vocab_cache_report,
 				  bypass_vocab_cache = bypass_vocab_cache,
-				  transformers = extras
+				  transformers = extras,
 				  vocab_expansion = vocab_expansion,
 				  vocab_cache = vocab_cache
 )
