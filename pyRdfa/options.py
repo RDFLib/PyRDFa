@@ -119,15 +119,15 @@ class Options :
 	@ivar content_type: the content type of the host file. Default is None
 	@type content_type: string (logically: an enumeration)
 	"""
-	def __init__(self, output_default_graph = True,
+	def __init__(self, output_default_graph   = True,
 					   output_processor_graph = False,
-					   space_preserve = True,
-					   transformers=[],
-					   vocab_cache_report = False,
-					   bypass_vocab_cache = False,
-					   hturtle = False,
-					   vocab_expansion = False,
-					   vocab_cache = False) :
+					   space_preserve         = True,
+					   transformers           = [],
+					   vocab_cache_report     = False,
+					   bypass_vocab_cache     = False,
+					   hturtle                = False,
+					   vocab_expansion        = False,
+					   vocab_cache            = False) :
 		"""
 		@keyword space_preserve: whether plain literals should preserve spaces at output or not
 		@type space_preserve: Boolean

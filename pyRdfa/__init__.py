@@ -595,11 +595,12 @@ def processURI(uri, outputFormat, form={}) :
 	 - C{graph=[output|processor|output,processor|processor,output]} specifying which graphs are returned. Default: output.
 	 - C{space-preserve=[true|false]} means that plain literals are normalized in terms of white spaces. Default: false.
 	 - C{rfa-version} provides the RDFa version that should be used for distilling. The string should be of the form "1.0", "1.1", etc. Default is the highest version the current package implements.
-	 - C{extras=[true|false]} means that extra, built-in transformers are executed on the DOM tree prior to RDFa processing. Default: false. Alternatively, a finer granurality can be used with the following options:
-	  - C{extras-meta=[true|false]}: the @name attribute for metas are converted into @property for further processing
 	 - C{host_language=[xhtml,html,xml]} : the host language. Used when files are uploaded or text is added verbatim, otherwise the HTTP return header should be used
-	 - C{vocab-cache-report=[true|false]} : whether vocab caching details should be reported
-	 - C{vocab-cache-bypass=[true|false]} : whether vocab caches have to be regenerated every time
+	 - C{embedded-turtle=[true|false]} : whether embedded turtle content should be added to the output graph. Default: true
+	 - C{vocab-expansion}=[true|false]} : whether the vocabularies should be expanded through the restricted RDFS entailment. Default: false
+	 - C{vocab-cache=[true|false]} : whether vocab caching should be performed or whether it should be ignored and vocabulary files should be picked up every time. Default: false
+	 - C{vocab-cache-report=[true|false]} : whether vocab caching details should be reported. Default: false
+	 - C{vocab-cache-bypass=[true|false]} : whether vocab caches have to be regenerated every time: Default: false
 
 	@param uri: URI to access. Note that the "text:" and "uploaded:" values are treated separately; the former is for textual intput (in which case a StringIO is used to get the data) and the latter is for uploaded file, where the form gives access to the file directly.
 	@param outputFormat: serialization formats, as understood by RDFLib. 
@@ -608,6 +609,12 @@ def processURI(uri, outputFormat, form={}) :
 	@return: serialized graph
 	@rtype: string
 	"""
+	def _get_option(param, compare_value, default) :
+		retval = default
+		if param in form.keys() :
+			val = form.getfirst(param).lower()
+			return val == compare_value
+
 	if uri == "uploaded:" :
 		input	= form["uploaded"].file
 		base	= ""
@@ -647,6 +654,8 @@ def processURI(uri, outputFormat, form={}) :
 		from pyRdfa.transform.lite import lite_prune
 		transformers.append(lite_prune)
 
+	# The code below is left for backward compatibility only. In fact, these options are not exposed any more,
+	# they are not really in use
 	if "extras" in form.keys() and form.getfirst("extras").lower() == "true" :
 		from pyRdfa.transform.metaname              	import meta_transform
 		from pyRdfa.transform.OpenID                	import OpenID_transform
@@ -673,23 +682,24 @@ def processURI(uri, outputFormat, form={}) :
 			output_processor_graph 	= True
 		elif a == "processor,output" or a == "output,processor" :
 			output_processor_graph 	= True
-
 		
-	space_preserve     = "space-preserve" in form.keys() and form.getfirst("space-preserve").lower() == "false"
-	vocab_cache_report = "vocab-cache-report" in form.keys() and form.getfirst("vocab-cache-report").lower() == "true"
-	bypass_vocab_cache = "vocab-cache-bypass" in form.keys() and form.getfirst("vocab-cache-bypass").lower() == "true"
-	vocab_expansion    = "vocab-expansion" in form.keys() and form.getfirst("vocab-expansion").lower() == "true"
-	vocab_cache        = "vocab-cache" in form.keys() and form.getfirst("vocab-cache").lower() == "true" 
+	embedded_turtle    = _get_option( "embedded-turtle", "true", True)
+	space_preserve     = _get_option( "space-preserve", "false", True)
+	vocab_cache        = _get_option( "vocab-cache", "true", False)
+	vocab_cache_report = _get_option( "vocab-cache-report", "true", False)
+	bypass_vocab_cache = _get_option( "vocab-cache-bypass", "true", False)
+	vocab_expansion    = _get_option( "vocab-expansion", "true", False)
 	if vocab_cache_report : output_processor_graph = True
 
-	options = Options(output_default_graph = output_default_graph,
+	options = Options(output_default_graph   = output_default_graph,
 					  output_processor_graph = output_processor_graph,
-					  space_preserve=space_preserve,
-					  transformers=transformers,
-					  vocab_cache_report=vocab_cache_report,
-					  bypass_vocab_cache=bypass_vocab_cache,
-					  vocab_expansion=vocab_expansion,
-					  vocab_cache=vocab_cache
+					  space_preserve         = space_preserve,
+					  transformers           = transformers,
+					  vocab_cache            = vocab_cache,
+					  vocab_cache_report     = vocab_cache_report,
+					  bypass_vocab_cache     = bypass_vocab_cache,
+					  vocab_expansion        = vocab_expansion,
+					  embedded_turtle        = embedded_turtle
 					  )
 	processor = pyRdfa(options = options, base = base, media_type = media_type, rdfa_version = rdfa_version)
 	

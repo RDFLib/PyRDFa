@@ -26,7 +26,7 @@ extraTransformers = [
 ###########################################	
 
 
-usageText="""Usage: %s -[vxtnpzsb:g:ryl] [filename[s]]
+usageText="""Usage: %s -[vxtnpzsb:g:ryle] [filename[s]]
 where:
   -x: output format RDF/XML
   -t: output format Turtle (default)
@@ -34,12 +34,13 @@ where:
   -p: output format pretty RDF/XML
   -z: exceptions should be returned as graphs instead of exceptions raised
   -b: give the base URI; if a file name is given, this can be left empty and the file name is used
-  -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document)
-  -l: run in RDFa 1.1 Lite mode
+  -s: whitespace on plain literals are not preserved (default: preserved, per RDFa syntax document); this is a non-standard feture
+  -l: run in RDFa 1.1 Lite mode (non-RDFa Lite attributes are ignored, and a warning is generated) (default: False)
   -r: report on the details of the vocabulary caching process
-  -y: bypass the cache checking, generate a new cache every time
+  -y: bypass the vocabulary cache checking, generate a new cache every time (good for debugging) (default:False)
   -v: perform vocabulary expansion (default: False)
   -g: value can be 'default', 'processor', 'output,processor' or 'processor,output'; controls which graphs are returned
+  -e: embedded (in a <script> element) Turtle content _not_ parsed and added to the output graph (default:True, ie, parsed)
 
 'Filename' can be a local file name or a URI. In case there is no filename, stdin is used.
 
@@ -49,19 +50,20 @@ The -g option may be unnecessary, the script tries to make a guess based on a de
 def usage() :
 	print usageText % sys.argv[0]
 
-format         = "turtle"
-extras         = []
-value          = ""
-space_preserve = True
-base           = ""
-value          = []
-rdfOutput	   = False
+format         			= "turtle"
+extras         			= []
+value          			= ""
+space_preserve 			= True
+base           			= ""
+value          			= []
+rdfOutput	   			= False
 output_default_graph 	= True
 output_processor_graph 	= True
 vocab_cache_report      = False
 bypass_vocab_cache      = False
 vocab_expansion         = False
 vocab_cache             = True
+hturtle					= True
 
 try :
 	opts, value = getopt.getopt(sys.argv[1:],"vxtnpzsb:g:ryl",['graph='])
@@ -76,6 +78,8 @@ try :
 			rdfOutput = True
 		elif o == "-b" :
 			base = a
+		elif o == "-e" :
+			hturtle = False
 		elif o == "-s" :
 			space_preserve = False
 		elif o == "-l" :
@@ -109,7 +113,8 @@ options = Options(output_default_graph = output_default_graph,
 				  bypass_vocab_cache = bypass_vocab_cache,
 				  transformers = extras,
 				  vocab_expansion = vocab_expansion,
-				  vocab_cache = vocab_cache
+				  vocab_cache = vocab_cache,
+				  hturtle = hturtle
 )
 
 processor = pyRdfa(options, base)

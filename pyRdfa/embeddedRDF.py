@@ -31,6 +31,13 @@ def handle_embeddedRDF(node, graph, state) :
 	@return: whether an RDF/XML content has been detected or not. If TRUE, the RDFa processing should not occur on the node and its descendents. 
 	@rtype: Boolean
 	"""
+	def _get_prefixes_in_turtle() :
+		retval = ""
+		for key in state.term_or_curie.ns :
+			retval += "@prefix %s: <%s> .\n" % (key, state.term_or_curie.ns[key])
+		retval += '\n'
+		return retval
+	
 	def _get_literal(Pnode):
 		"""
 		Get the full text
@@ -44,11 +51,13 @@ def handle_embeddedRDF(node, graph, state) :
 		# Sigh... the HTML5 parser does not recognize the CDATA escapes, ie, it just passes on the <![CDATA[ and ]]> strings:-(
 		return rc.replace("<![CDATA[","").replace("]]>","")
 	
-	# The HTML/XHTML case is different: it can handle embedded turtle per Sandro's idea...
-	if state.options.host_language in [HostLanguage.html, HostLanguage.xhtml] :
+	# Embedded turtle, per the latest Turtle draft
+	if state.options.host_language in [HostLanguage.html, HostLanguage.xhtml, HostLanguage.svg] :
 		if state.options.hturtle == True and node.nodeName.lower() == "script" :
 			if node.hasAttribute("type") and node.getAttribute("type") == "text/turtle" :
-				rdf = StringIO(_get_literal(node))
+				prefixes = _get_prefixes_in_turtle()
+				content  = _get_literal(node)
+				rdf = StringIO(prefixes + content)
 				graph.parse(rdf, format="n3", publicID = state.base)
 	else :
 		# This is the embedded RDF/XML case in XML based languages
