@@ -81,7 +81,7 @@ def return_graph(uri, options, newCache = False) :
 	
 	try :
 		content = URIOpener(uri,
-							{'Accept' : 'text/html;q=0.8, application/xhtml+xml;q=0.8, text/turtle;q=1.0, application/rdf+xml;q=0.7'})
+							{'Accept' : 'text/html;q=0.8, application/xhtml+xml;q=0.8, text/turtle;q=1.0, application/rdf+xml;q=0.9'})
 
 	except HTTPError, e :
 		return_to_cache(e.msg)
