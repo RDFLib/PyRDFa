@@ -43,7 +43,6 @@ initial_context["http://www.w3.org/2011/rdfa-context/rdfa-1.1"].ns = {
 	'void'		: 'http://rdfs.org/ns/void#',
 	'ical'		: 'http://www.w3.org/2002/12/cal/icaltzd#',
 	'vcard'		: 'http://www.w3.org/2006/vcard/ns#',
-	'xmlns'		: 'http://www.w3.org/2000/xmlns/',
 	'wdrs'		: 'http://www.w3.org/2007/05/powder-s#',
 	'og'		: 'http://ogp.me/ns#',
 	'wdr'		: 'http://www.w3.org/2007/05/powder#',
