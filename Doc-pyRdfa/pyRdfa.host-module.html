@@ -62,7 +62,7 @@
   <p>This module may have to be modified if a new host language is added to
   the system. In many cases the rdfa_core as a host language is enough, 
   because there is no need for a special processing. However, some host 
-  languages may require a default profile, or their value may control some 
+  languages may require an initial context, or their value may control some
   transformations, in which case additional data have to be added to this 
   module. This module header contains all tables and arrays to be adapted, 
   and the module content may contain specific transformation methods.</p>
@@ -107,6 +107,7 @@
   <tr><td class="summary">
   <ul class="nomargin">
     <li> <strong class="uidlink"><a href="pyRdfa.host.atom-module.html">pyRdfa.host.atom</a></strong>: <em class="summary">Add a top &quot;about&quot; to &lt;head&gt; and &lt;body&gt;</em>    </li>
+    <li> <strong class="uidlink"><a href="pyRdfa.host.html5-module.html">pyRdfa.host.html5</a></strong>: <em class="summary">Add a top &quot;about&quot; to &lt;head&gt; and &lt;body&gt;</em>    </li>
   </ul></td></tr>
 </table>
 
@@ -168,14 +169,14 @@
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="pyRdfa.host-module.html#default_profiles" class="summary-name">default_profiles</a> = <code title="{'Atom+RDFa': ['http://www.w3.org/profile/rdfa-1.1'],
- 'HTML5+RDFa': ['http://www.w3.org/profile/rdfa-1.1',
-                'http://www.w3.org/profile/html-rdfa-1.1'],
- 'RDFa Core': ['http://www.w3.org/profile/rdfa-1.1'],
- 'SVG+RDFa': ['http://www.w3.org/profile/rdfa-1.1'],
- 'XHTML+RDFa': ['http://www.w3.org/profile/rdfa-1.1',
-                'http://www.w3.org/profile/html-rdfa-1.1']}"><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Atom+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/r</code><code class="variable-ellipsis">...</code></code><br />
-      mapping from host languages to list of default profiles
+        <a href="pyRdfa.host-module.html#initial_contexts" class="summary-name">initial_contexts</a> = <code title="{'Atom+RDFa': ['http://www.w3.org/2011/rdfa-context/rdfa-1.1'],
+ 'HTML5+RDFa': ['http://www.w3.org/2011/rdfa-context/rdfa-1.1',
+                'http://www.w3.org/2011/rdfa-context/html-rdfa-1.1'],
+ 'RDFa Core': ['http://www.w3.org/2011/rdfa-context/rdfa-1.1'],
+ 'SVG+RDFa': ['http://www.w3.org/2011/rdfa-context/rdfa-1.1'],
+ 'XHTML+RDFa': ['http://www.w3.org/2011/rdfa-context/rdfa-1.1',
+                'http://www.w3.org/2011/rdfa-context/html-rdfa-1.1']}"><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Atom+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa</code><code class="variable-ellipsis">...</code></code><br />
+      mapping from host languages to list of initial contexts
     </td>
   </tr>
 <tr>
@@ -220,7 +221,8 @@
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="pyRdfa.host-module.html#host_dom_transforms" class="summary-name">host_dom_transforms</a> = <code title="{HostLanguage.atom: [atom_add_entry_type]}">{HostLanguage.atom: [atom_add_entry_type]}</code><br />
+        <a href="pyRdfa.host-module.html#host_dom_transforms" class="summary-name">host_dom_transforms</a> = <code title="{HostLanguage.atom: [atom_add_entry_type], HostLanguage.html: [html5_e\
+xtra_attributes]}">{HostLanguage.atom: [atom_add_entry_type<code class="variable-ellipsis">...</code></code><br />
       dictionary mapping a host language to an array of methods that are 
       invoked at the beginning of the parsing process for a specific node.
     </td>
@@ -238,8 +240,8 @@
  'copyright',
  'glossary',
 ..."><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">alternate</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">appendix</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">cite</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">bookma</code><code class="variable-ellipsis">...</code></code><br />
-      terms that are hardcoded for HTML+RDF1.0 and replace the default 
-      profile for that version
+      terms that are hardcoded for HTML+RDF1.0 and replace the initial 
+      context for that version
     </td>
   </tr>
 <tr>
@@ -283,7 +285,9 @@
 </table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
   <a href="pyRdfa.host.atom-module.html#atom_add_entry_type" title="pyRdfa.host.atom.atom_add_entry_type">atom_add_entry_type</a>,
-  <a href="pyRdfa.host.atom-module.html" title="pyRdfa.host.atom">atom</a>
+  <a href="pyRdfa.host.html5-module.html#html5_extra_attributes" title="pyRdfa.host.html5.html5_extra_attributes">html5_extra_attributes</a>,
+  <a href="pyRdfa.host.atom-module.html" title="pyRdfa.host.atom">atom</a>,
+  <a href="pyRdfa.host.html5-module.html" title="pyRdfa.host.html5">html5</a>
 </p><br />
 <!-- ==================== VARIABLES DETAILS ==================== -->
 <a name="section-VariablesDetails"></a>
@@ -303,25 +307,25 @@
   </td>
 </tr>
 </table>
-<a name="default_profiles"></a>
+<a name="initial_contexts"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
-  <h3 class="epydoc">default_profiles</h3>
-  mapping from host languages to list of default profiles
+  <h3 class="epydoc">initial_contexts</h3>
+  mapping from host languages to list of initial contexts
   <dl class="fields">
   </dl>
   <dl class="fields">
     <dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Atom+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
- <code class="variable-quote">'</code><code class="variable-string">HTML5+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-op">,</code>
-                <code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/html-rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
- <code class="variable-quote">'</code><code class="variable-string">RDFa Core</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
- <code class="variable-quote">'</code><code class="variable-string">SVG+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
- <code class="variable-quote">'</code><code class="variable-string">XHTML+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-op">,</code>
-                <code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/profile/html-rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-group">}</code>
+<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Atom+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">HTML5+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-op">,</code>
+                <code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/html-rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">RDFa Core</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">SVG+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">XHTML+RDFa</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">[</code><code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-op">,</code>
+                <code class="variable-quote">'</code><code class="variable-string">http://www.w3.org/2011/rdfa-context/html-rdfa-1.1</code><code class="variable-quote">'</code><code class="variable-group">]</code><code class="variable-group">}</code>
 </pre></td></tr></table>
 </dd>
   </dl>
@@ -405,7 +409,8 @@
   <dl class="fields">
     <dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
-{HostLanguage.atom: [atom_add_entry_type]}
+{HostLanguage.atom: [atom_add_entry_type], HostLanguage.html: [html5_e<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+xtra_attributes]}
 </pre></td></tr></table>
 </dd>
   </dl>
@@ -417,7 +422,7 @@
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">predefined_1_0_rel</h3>
-  terms that are hardcoded for HTML+RDF1.0 and replace the default profile 
+  terms that are hardcoded for HTML+RDF1.0 and replace the initial context 
   for that version
   <dl class="fields">
   </dl>
@@ -517,7 +522,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Sep 17 12:08:19 2011
+    Generated by Epydoc 3.0.1 on Mon Nov 14 14:56:37 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -598,7 +598,7 @@ def processURI(uri, outputFormat, form={}) :
 	 - C{rfa-version} provides the RDFa version that should be used for distilling. The string should be of the form "1.0", "1.1", etc. Default is the highest version the current package implements.
 	 - C{host-language=[xhtml,html,xml]} : the host language. Used when files are uploaded or text is added verbatim, otherwise the HTTP return header should be used
 	 - C{embedded-turtle=[true|false]} : whether embedded turtle content should be added to the output graph. Default: true
-	 - C{vocab-expansion}=[true|false]} : whether the vocabularies should be expanded through the restricted RDFS entailment. Default: false
+	 - C{vocab-expansion=[true|false]} : whether the vocabularies should be expanded through the restricted RDFS entailment. Default: false
 	 - C{vocab-cache=[true|false]} : whether vocab caching should be performed or whether it should be ignored and vocabulary files should be picked up every time. Default: false
 	 - C{vocab-cache-report=[true|false]} : whether vocab caching details should be reported. Default: false
 	 - C{vocab-cache-bypass=[true|false]} : whether vocab caches have to be regenerated every time: Default: false

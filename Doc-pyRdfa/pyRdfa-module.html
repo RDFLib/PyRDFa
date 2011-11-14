@@ -286,13 +286,13 @@ print pyRdfa(options=options).rdf_from_source('filename')
       the caches off-line instead of letting the tool writing its own cache
       when operating, e.g., as a service on the Web. This can be achieved 
       by making the cache directory read only.</p>
-      <p>If the directories are neither readable nor writable, the profile 
-      files are retrieved via HTTP every time they are hit. This may slow 
-      down processing, it is advised to avoid such a setup for the 
+      <p>If the directories are neither readable nor writable, the 
+      vocabulary files are retrieved via HTTP every time they are hit. This
+      may slow down processing, it is advised to avoid such a setup for the
       package.</p>
       <p>The cache includes a separate index file and a file for each 
-      profile. Cache control is based upon the 'EXPIRES' header of a 
-      vocabulary file: when first seen, this data is stored in the index 
+      vocabulary file. Cache control is based upon the 'EXPIRES' header of 
+      a vocabulary file: when first seen, this data is stored in the index 
       file and controls whether the cache has to be renewed or not. If the 
       HTTP return header does not have this entry, the date is artificially
       set ot the current date plus one day.</p>
@@ -337,7 +337,7 @@ print pyRdfa(options=options).rdf_from_source('filename')
         target="_top">W3C&#174; SOFTWARE NOTICE AND LICENSE</a>
       </p>
       <p><strong>Version:</strong>
-        3.0.2
+        3.0.3
       </p>
       <p><strong>Contact:</strong>
         Ivan Herman, ivan@w3.org
@@ -361,18 +361,19 @@ print pyRdfa(options=options).rdf_from_source('filename')
 </tr>
   <tr><td class="summary">
   <ul class="nomargin">
-    <li> <strong class="uidlink"><a href="pyRdfa.defaultprofiles-module.html">pyRdfa.defaultprofiles</a></strong>: <em class="summary">Management of vocabularies, terms, and their mapping to URI-s.</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.embeddedRDF-module.html">pyRdfa.embeddedRDF</a></strong>: <em class="summary">Extracting possible embedded RDF/XML content from the file and 
         parse it separately into the Graph.</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.graph-module.html">pyRdfa.graph</a></strong>: <em class="summary">Shell around RDLib's Graph</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.host-module.html">pyRdfa.host</a></strong>: <em class="summary">RDFa Transformer package</em>
     <ul>
     <li> <strong class="uidlink"><a href="pyRdfa.host.atom-module.html">pyRdfa.host.atom</a></strong>: <em class="summary">Add a top &quot;about&quot; to &lt;head&gt; and &lt;body&gt;</em>    </li>
+    <li> <strong class="uidlink"><a href="pyRdfa.host.html5-module.html">pyRdfa.host.html5</a></strong>: <em class="summary">Add a top &quot;about&quot; to &lt;head&gt; and &lt;body&gt;</em>    </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="pyRdfa.literal-module.html">pyRdfa.literal</a></strong>: <em class="summary">RDFa Literal generation</em>    </li>
+    <li> <strong class="uidlink"><a href="pyRdfa.initialcontext-module.html">pyRdfa.initialcontext</a></strong>: <em class="summary">Management of vocabularies, terms, and their mapping to URI-s.</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.options-module.html">pyRdfa.options</a></strong>: <em class="summary">RDFa parser (distiller)</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.parse-module.html">pyRdfa.parse</a></strong>: <em class="summary">RDFa core parser processing step</em>    </li>
+    <li> <strong class="uidlink"><a href="pyRdfa.property-module.html">pyRdfa.property</a></strong>: <em class="summary">RDFa Literal generation</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.rdfs-module.html">pyRdfa.rdfs</a></strong>: <em class="summary">RDFa parser (distiller)</em>
     <ul>
     <li> <strong class="uidlink"><a href="pyRdfa.rdfs.cache-module.html">pyRdfa.rdfs.cache</a></strong>: <em class="summary">RDFa parser (distiller)</em>    </li>
@@ -395,6 +396,9 @@ print pyRdfa(options=options).rdf_from_source('filename')
     <ul>
     <li> <strong class="uidlink"><a href="pyRdfa.transform.DublinCore-module.html">pyRdfa.transform.DublinCore</a></strong>: <em class="summary">Dublin Core transformer</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.transform.OpenID-module.html">pyRdfa.transform.OpenID</a></strong>: <em class="summary">OpenID transformer module.</em>    </li>
+    <li> <strong class="uidlink"><a href="pyRdfa.transform.lite-module.html">pyRdfa.transform.lite</a></strong>: <em class="summary">Simple transfomer: <code>meta</code> element is extended with a 
+        <code>property</code> attribute, with a copy of the 
+        <code>name</code> attribute values.</em>    </li>
     <li> <strong class="uidlink"><a href="pyRdfa.transform.metaname-module.html">pyRdfa.transform.metaname</a></strong>: <em class="summary">Simple transfomer: <code>meta</code> element is extended with a 
         <code>property</code> attribute, with a copy of the 
         <code>name</code> attribute values.</em>    </li>
@@ -958,9 +962,9 @@ ference) \'%s\'; ignored'"><code class="variable-quote">'</code><code class="var
   <a href="pyRdfa.embeddedRDF-module.html" title="pyRdfa.embeddedRDF">embeddedRDF</a>,
   <a href="pyRdfa.graph-module.html" title="pyRdfa.graph">graph</a>,
   <a href="pyRdfa.host-module.html" title="pyRdfa.host">host</a>,
-  <a href="pyRdfa.literal-module.html" title="pyRdfa.literal">literal</a>,
   <a href="pyRdfa.options-module.html" title="pyRdfa.options">options</a>,
   <a href="pyRdfa.parse-module.html" title="pyRdfa.parse">parse</a>,
+  <a href="pyRdfa.property-module.html" title="pyRdfa.property">property</a>,
   <a href="pyRdfa.state-module.html" title="pyRdfa.state">state</a>,
   <a href="pyRdfa.termorcurie-module.html" title="pyRdfa.termorcurie">termorcurie</a>,
   <a href="pyRdfa.transform-module.html" title="pyRdfa.transform">transform</a>,
@@ -1007,8 +1011,8 @@ ference) \'%s\'; ignored'"><code class="variable-quote">'</code><code class="var
   <ul>
     <li>
       
-      <code>graph=[default|processor|default,processor|processor,default]</code>
-      specifying which graphs are returned. Default: default.
+      <code>graph=[output|processor|output,processor|processor,output]</code>
+      specifying which graphs are returned. Default: output.
     </li>
     <li>
       <code>space-preserve=[true|false]</code> means that plain literals 
@@ -1021,29 +1025,31 @@ ference) \'%s\'; ignored'"><code class="variable-quote">'</code><code class="var
       the current package implements.
     </li>
     <li>
-      <code>extras=[true|false]</code> means that extra, built-in 
-      transformers are executed on the DOM tree prior to RDFa processing. 
-      Default: false. Alternatively, a finer granurality can be used with 
-      the following options:
-      <ul>
-        <li>
-          <code>extras-meta=[true|false]</code>: the @name attribute for 
-          metas are converted into @property for further processing
-        </li>
-      </ul>
-    </li>
-    <li>
-      <code>host_language=[xhtml,html,xml]</code> : the host language. Used
+      <code>host-language=[xhtml,html,xml]</code> : the host language. Used
       when files are uploaded or text is added verbatim, otherwise the HTTP
       return header should be used
     </li>
     <li>
+      <code>embedded-turtle=[true|false]</code> : whether embedded turtle 
+      content should be added to the output graph. Default: true
+    </li>
+    <li>
+      <code>vocab-expansion=[true|false]</code> : whether the vocabularies 
+      should be expanded through the restricted RDFS entailment. Default: 
+      false
+    </li>
+    <li>
+      <code>vocab-cache=[true|false]</code> : whether vocab caching should 
+      be performed or whether it should be ignored and vocabulary files 
+      should be picked up every time. Default: false
+    </li>
+    <li>
       <code>vocab-cache-report=[true|false]</code> : whether vocab caching 
-      details should be reported
+      details should be reported. Default: false
     </li>
     <li>
       <code>vocab-cache-bypass=[true|false]</code> : whether vocab caches 
-      have to be regenerated every time
+      have to be regenerated every time: Default: false
     </li>
   </ul>
   <dl class="fields">
@@ -1837,7 +1843,7 @@ deUsage')
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Sep 17 12:08:19 2011
+    Generated by Epydoc 3.0.1 on Mon Nov 14 14:56:37 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

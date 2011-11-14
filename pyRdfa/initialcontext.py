@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Built-in version of the initial contexts. 
+Built-in version of the initial contexts for RDFa Core, and RDFa + HTML
 
 @summary: Management of vocabularies, terms, and their mapping to URI-s.
 @requires: U{RDFLib package<http://rdflib.net>}
@@ -62,7 +62,6 @@ initial_context["http://www.w3.org/2011/rdfa-context/rdfa-1.1"].vocabulary = ""
 
 initial_context["http://www.w3.org/2011/rdfa-context/html-rdfa-1.1"].ns = {
 }
-
 
 initial_context["http://www.w3.org/2011/rdfa-context/html-rdfa-1.1"].vocabulary = ""
 
