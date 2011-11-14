@@ -119,7 +119,9 @@ options = Options(output_default_graph = output_default_graph,
 
 processor = pyRdfa(options, base)
 if len(value) >= 1 :
-	print processor.rdf_from_sources(value, outputFormat = format, rdfOutput = rdfOutput)
+	retval = processor.rdf_from_sources(value, outputFormat = format, rdfOutput = rdfOutput)
 else :
-	print processor.rdf_from_source(sys.stdin, outputFormat = format, rdfOutput = rdfOutput)
-	
+	retval = processor.rdf_from_source(sys.stdin, outputFormat = format, rdfOutput = rdfOutput)
+
+print retval
+

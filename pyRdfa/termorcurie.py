@@ -106,7 +106,6 @@ class InitialContext :
 		
 		from initialcontext		import initial_context  as context_data
 		from host 				import initial_contexts as context_ids
-		print 
 		for id in context_ids[state.options.host_language] :
 			# This gives the id of a initial context, valid for this media type:
 			data = context_data[id]

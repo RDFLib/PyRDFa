@@ -50,7 +50,7 @@ def handle_embeddedRDF(node, graph, state) :
 				rc = rc + node.data
 		# Sigh... the HTML5 parser does not recognize the CDATA escapes, ie, it just passes on the <![CDATA[ and ]]> strings:-(
 		return rc.replace("<![CDATA[","").replace("]]>","")
-	
+
 	# Embedded turtle, per the latest Turtle draft
 	if state.options.host_language in [HostLanguage.html, HostLanguage.xhtml, HostLanguage.svg] :
 		if state.options.hturtle == True and node.nodeName.lower() == "script" :
