@@ -180,13 +180,13 @@ Thanks to Elias Torrez, who provided with the idea and patches to interface to t
 
 """
 
-__version__ = "3.0.3"
+__version__ = "3.0.4"
 __author__  = 'Ivan Herman'
 __contact__ = 'Ivan Herman, ivan@w3.org'
 __license__ = u'W3C® SOFTWARE NOTICE AND LICENSE, http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231'
 
 import sys, StringIO
-import os, httpheader
+import os
 
 import rdflib
 from rdflib	import URIRef
@@ -201,6 +201,7 @@ else :
 	from rdflib.RDF		import RDFNS  as ns_rdf
 
 from pyRdfa.graph import MyGraph as Graph
+from pyRdfa import httpheader
 
 import xml.dom.minidom
 import urlparse
@@ -421,7 +422,7 @@ class pyRdfa :
 								self.charset = 'utf-8'
 								break
 						self.options.set_host_language(self.media_type)
-					return file(name)
+					return open(name, 'r')
 			else :
 				return name
 		except :
