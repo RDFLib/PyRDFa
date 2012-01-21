@@ -689,7 +689,7 @@ class range_spec(object):
         is the is_unbounded() method.
 
         """
-        return first is not None and last is not None
+        return self.first is not None and self.last is not None
 
     def is_unbounded(self):
         """Returns True if the number of bytes in the range is unspecified.
@@ -1299,9 +1299,9 @@ class content_type(object):
             # already a dictionary
             pl = parameter_list_or_dict
         else:
-            pl, k = parse_parameter_list(parameter_list)
-            if k < len(parameter_list):
-                raise ParseError('Invalid parameter list',paramter_list,k)
+            pl, k = parse_parameter_list(parameter_list_or_dict)
+            if k < len(parameter_list_or_dict):
+                raise ParseError('Invalid parameter list',parameter_list_or_dict,k)
         self.parmdict = dict(pl)
 
     def set(self, content_type_string, with_parameters=True):
@@ -1676,7 +1676,7 @@ def acceptable_charset( accept_charset_header, charsets, ignore_wildcard=True, d
 
     """
     if default:
-        default = _canonical_charset(default)
+        default = canonical_charset(default)
 
     if _is_string(accept_charset_header):
         accept_list = parse_accept_header(accept_charset_header)
@@ -1684,9 +1684,9 @@ def acceptable_charset( accept_charset_header, charsets, ignore_wildcard=True, d
         accept_list = accept_charset_header
 
     if _is_string(charsets):
-        charsets = [_canonical_charset(charsets)]
+        charsets = [canonical_charset(charsets)]
     else:
-        charsets = [_canonical_charset(c) for c in charsets]
+        charsets = [canonical_charset(c) for c in charsets]
 
     # Note per RFC that 'ISO-8859-1' is special, and is implictly in the
     # accept list with q=1; unless it is already in the list, or '*' is in the list.
@@ -1700,7 +1700,7 @@ def acceptable_charset( accept_charset_header, charsets, ignore_wildcard=True, d
             if not best or qvalue > best[1]:
                 best = (c, qvalue)
         else:
-            c = _canonical_charset(c)
+            c = canonical_charset(c)
             for test_c in charsets:
                 if c == default:
                     default = None
