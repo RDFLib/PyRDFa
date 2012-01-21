@@ -23,7 +23,6 @@ __contact__ = 'Ivan Herman, ivan@w3.org'
 __license__ = u'W3C® SOFTWARE NOTICE AND LICENSE, http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231'
 
 import sys, StringIO
-import os, httpheader
 
 import rdflib
 from rdflib	import URIRef
