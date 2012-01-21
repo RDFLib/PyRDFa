@@ -108,9 +108,10 @@ class MyGraph(Graph) :
 					 "pyRdfa.serializers.turtleserializer", "TurtleSerializer")
 			MyGraph.turtle_serialzier_registered_2 = True
 			
-	def add(self, (s,p,o)) :
+	def add(self, triple) :
 		"""Overriding the Graph's add method to filter out triples with possible None values. It may happen
 		in case, for example, a host language is not properly set up for the distiller"""
+		(s,p,o) = triple
 		if s == None or p == None or o == None :
 			return
 		else :
