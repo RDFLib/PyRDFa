@@ -422,7 +422,11 @@ class pyRdfa :
 								self.charset = 'utf-8'
 								break
 						self.options.set_host_language(self.media_type)
-					return open(name, 'r')
+					from py3compat import PY3
+					if PY3:
+						return open(name, 'rb')
+					else:
+						return open(name, 'r')
 			else :
 				return name
 		except :
