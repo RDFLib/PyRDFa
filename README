@@ -1,6 +1,14 @@
-An RDFa 1.1 parser for Python, also referred to as a “RDFa Distiller”. 
 
-It is deployed, via a CGI front-end, on the W3C `RDFa Distiller page <http://www.w3.org/2007/08/pyRdfa/>`_.
+*** THIS IS AN OUTDATED VERSION, KEPT ONLY FOR HISTORICAL REASONS ***
 
-For details on RDFa, the reader should consult the `RDFa Core 1.1 <http://www.w3.org/TR/rdfa-core/>`_
-and the `XHTML+RDFa1.1 <http://www.w3.org/TR/2010/xhtml-rdfa>`_ documents.
+The software to be used is at the https://github.com/RDFLib/pyrdfa3 repo; that one has been updated to RDFa 1.1, and has also been used to incorporate native RDFa processing into RDFLib. Keep away from this version:-)
+
+(I do not know whether there users directly referring to this URI and repo, that is the only reason I do not remove the repo altogether.)
+
+=============
+
+
+An RDFa parser for Python, also referred to as a “RDFa Distiller”. 
+
+It is deployed, via a CGI front-end, on the W3C `RDFa Distiller page <http://www.w3.org/2007/08/pyRdfa/>`.
+
