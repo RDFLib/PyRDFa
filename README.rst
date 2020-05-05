@@ -1,12 +1,13 @@
+PyRDFa
+======
 
-*** THIS IS AN OUTDATED VERSION, KEPT ONLY FOR HISTORICAL REASONS ***
+**THIS IS AN OUTDATED VERSION OF AN RDFa PARSER, KEPT ONLY FOR HISTORICAL REASONS**
 
-The software to be used is at the https://github.com/RDFLib/pyrdfa3 repo; that one has been updated to RDFa 1.1, and has also been used to incorporate native RDFa processing into RDFLib. Keep away from this version:-)
+This software is replaced by `pyrdfa3 <https://github.com/RDFLib/pyrdfa3>`_ which has been updated to RDFa 1.1 and has also been used to incorporate native RDFa processing into RDFLib. Keep away from this version :-)
 
 (I do not know whether there users directly referring to this URI and repo, that is the only reason I do not remove the repo altogether.)
 
 =============
-
 
 An RDFa parser for Python, also referred to as a “RDFa Distiller”. 
 
